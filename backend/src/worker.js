@@ -17,11 +17,21 @@ function validSubscription(s){
 async function digest(s){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}
 function escapeXml(s){return s.replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g,'$1')}
 function parseFeed(xml){
- if(!/<rss[\s>]/i.test(xml))throw Error('Invalid RSS response');
- return [...xml.matchAll(/<item>([\s\S]*?)<\/item>/g)].slice(0,12).map(m=>{
-  const val=k=>text(escapeXml(m[1].match(new RegExp('<'+k+'(?:\\s[^>]*)?>([\\s\\S]*?)<\\/'+k+'>'))?.[1]||''));
+ if(!/<rss[\\s>]/i.test(xml))throw Error('Invalid RSS response');
+ return [...xml.matchAll(/<item>([\\s\\S]*?)<\\/item>/g)].slice(0,12).map(m=>{
+  const raw=m[1];
+  const val=k=>text(escapeXml(raw.match(new RegExp('<'+k+'(?:\\\\s[^>]*)?>([\\\\s\\\\S]*?)<\\\\/'+k+'>','i'))?.[1]||''));
   let url=val('link');try{const u=new URL(url);if(u.hostname==='www.bing.com'&&u.pathname==='/news/apiclick.aspx')url=u.searchParams.get('url')||url}catch{}
-  return {title:val('title'),url,published:val('pubDate'),source:val('source')||val('News:Source')};
+  const candidates=[];
+  for(const match of raw.matchAll(/<(?:media:thumbnail|media:content|enclosure)\\b([^>]*?)\\/?\s*>/gi)){
+   const attrs=match[1],imageUrl=attrs.match(/\\burl=["']([^"']+)["']/i)?.[1];
+   if(imageUrl&&(!/\\btype=["']/.test(attrs)||/\\btype=["']image\\//i.test(attrs)))candidates.push(imageUrl);
+  }
+  const description=val('description')||val('content:encoded');
+  const htmlImg=description.match(/<img\\b[^>]*\\bsrc=["']([^"']+)["']/i)?.[1];
+  if(htmlImg)candidates.push(htmlImg);
+  const image=candidates.map(x=>text(escapeXml(x))).find(x=>{try{const u=new URL(x);return u.protocol==='https:'&&!/^(localhost|127\\.|10\\.|192\\.168\\.)/.test(u.hostname)}catch{return false}})||null;
+  return {title:val('title'),url,published:val('pubDate'),source:val('source')||val('News:Source'),image};
  }).filter(x=>x.title&&x.url.startsWith('https://'));
 }
 async function localNews(city){
