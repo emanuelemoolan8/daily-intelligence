@@ -52,19 +52,30 @@ function pushReady(env){
   return publicKey===env.VAPID_PUBLIC_KEY&&typeof env.VAPID_SUBJECT==='string'&&/^(mailto:[^\s@]+@[^\s@]+\.[^\s@]+|https:\/\/[^\s]+)$/.test(env.VAPID_SUBJECT);
  }catch{return false}
 }
-function dueDate(item,now){
- const parts=Object.fromEntries(new Intl.DateTimeFormat('en-CA',{timeZone:item.timeZone,year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(now).map(x=>[x.type,x.value]));
- const current=Number(parts.hour)*60+Number(parts.minute),[h,m]=item.time.split(':').map(Number),target=h*60+m;
- if((current-target+1440)%1440>=60)return null;
- const day=new Date(Date.UTC(Number(parts.year),Number(parts.month)-1,Number(parts.day)-(current<target?1:0)));
- return day.toISOString().slice(0,10);
+const PUBLICATION_URL='https://emanuelemoolan8.github.io/daily-intelligence/publication.json';
+function localClock(item,now){
+ const parts=Object.fromEntries(new Intl.DateTimeFormat('en-GB',{timeZone:item.timeZone,year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(now).map(x=>[x.type,x.value]));
+ return {date:parts.year+'-'+parts.month+'-'+parts.day,minute:Number(parts.hour)*60+Number(parts.minute)};
+}
+async function publishedEdition(){
+ const r=await fetch(PUBLICATION_URL+'?check='+Math.floor(Date.now()/3600000),{headers:{'Cache-Control':'no-cache'}});
+ if(!r.ok)throw Error('Publication status unavailable');
+ const p=await r.json();
+ if(!/^\\d{4}-\\d{2}-\\d{2}$/.test(p.date)||p.ready!==true||!Array.isArray(p.audio)||p.audio.length<4)throw Error('Edition not ready');
+ const base='https://emanuelemoolan8.github.io/daily-intelligence/';
+ for(const file of p.audio){
+  if(typeof file!=='string'||!/^audio\\/[a-zA-Z0-9._-]+\\.mp3$/.test(file))throw Error('Invalid audio path');
+ }
+ const responses=await Promise.all([fetch(base+'index.html',{method:'HEAD',cache:'no-store'}),...p.audio.map(file=>fetch(base+file,{method:'HEAD',cache:'no-store'}))]);
+ if(responses.some(r=>!r.ok))throw Error('Edition or audio missing');
+ return p;
 }
 export default {
  async fetch(request,env){
   if(request.headers.get('Origin')&&request.headers.get('Origin')!==headers['Access-Control-Allow-Origin'])return json({error:'Origin not allowed'},403);
   if(request.method==='OPTIONS')return new Response(null,{headers});
   const url=new URL(request.url);
-  if(url.pathname==='/api/config'&&request.method==='GET')return json({vapidPublicKey:env.VAPID_PUBLIC_KEY||null,pushEnabled:pushReady(env),schedule:'hourly',deliveryWindowMinutes:60});
+  if(url.pathname==='/api/config'&&request.method==='GET')return json({vapidPublicKey:env.VAPID_PUBLIC_KEY||null,pushEnabled:pushReady(env),schedule:'hourly',deliveryWindowMinutes:60,publicationAware:true});
   if(url.pathname==='/api/local'&&request.method==='GET'){
     const city=url.searchParams.get('city');if(!validCity(city))return json({error:'Invalid city'},400);
     try{return json(await localNews(city))}catch(e){return json({error:'Local news feed unavailable. Please retry later.'},503)}
@@ -91,20 +102,25 @@ export default {
  },
  async scheduled(event,env,ctx){
   if(!pushReady(env))return;
-  let cursor;do{
+  let publication;
+  try{publication=await publishedEdition()}catch(e){console.warn('Skipping push: '+e.message);return}
+  let cursor;
+  do{
    const page=await env.SUBSCRIPTIONS.list({prefix:'sub:',cursor,limit:100});
    for(const entry of page.keys){await (async()=>{
-    const raw=await env.SUBSCRIPTIONS.get(entry.name);if(!raw)return;const item=JSON.parse(raw);
+    const raw=await env.SUBSCRIPTIONS.get(entry.name);if(!raw)return;
+    const item=JSON.parse(raw);
     if(!validSubscription(item.subscription)||!validTime(item.time)||!validZone(item.timeZone))return;
-    const date=dueDate(item,new Date(event.scheduledTime));
-    // Send on the first hourly tick at or after the preference, including fractional-offset zones.
-    if(!date||item.lastSent===date)return;
+    const clock=localClock(item,new Date(event.scheduledTime));
+    const [h,m]=item.time.split(':').map(Number);
+    if(clock.date!==publication.date||clock.minute<h*60+m||item.lastSent===publication.date)return;
     const response=await sendPush(env,item.subscription);
     if(response.status===404||response.status===410){await env.SUBSCRIPTIONS.delete(entry.name);return}
-    if(response.ok){item.lastSent=date;await env.SUBSCRIPTIONS.put(entry.name,JSON.stringify(item))}
+    if(response.ok){item.lastSent=publication.date;await env.SUBSCRIPTIONS.put(entry.name,JSON.stringify(item))}
    })().catch(()=>console.error('Scheduled push failed'))}
    cursor=page.cursor;
   }while(cursor);
+
  }
 };
 
