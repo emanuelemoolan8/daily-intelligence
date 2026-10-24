@@ -1,0 +1,10 @@
+name = "daily-intelligence-api"
+main = "src/worker.js"
+compatibility_date = "2026-10-24"
+workers_dev = true
+# Set this to the KV namespace created in your Cloudflare account.
+# [[kv_namespaces]]
+# binding = "SUBSCRIPTIONS"
+# id = "REPLACE_WITH_YOUR_KV_NAMESPACE_ID"
+[triggers]
+crons = ["0 * * * *"]
