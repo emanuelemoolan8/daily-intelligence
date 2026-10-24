@@ -144,14 +144,21 @@ if(supported){window.speechSynthesis.onvoiceschanged=updateVoiceHint}updateVoice
  const audio=document.getElementById('podcastAudio'),status=document.getElementById('podcastStatus');
  const language=document.getElementById('podcastLanguage'),depth=document.getElementById('podcastDepth'),speed=document.getElementById('podcastSpeed');
  const file=()=> 'audio/2026-10-24-'+language.value+'-'+depth.value+'.mp3';
+ let trackRequest=0;
+ const currentLanguage=()=>document.getElementById('lang')?.value==='ml'?'ml':'en';
+ const message=(en,ml)=>currentLanguage()==='ml'?ml:en;
  async function loadTrack(){
+   const request=++trackRequest;
+   const wasPlaying=!audio.paused&&!audio.ended;
    audio.pause();audio.removeAttribute('src');audio.load();
-   const path=file();status.textContent='Checking audio: '+language.value.toUpperCase()+' · '+depth.value+'…';
+   const path=file();
+   status.textContent=message('Loading '+(language.value==='ml'?'Malayalam':'English')+' audio…','ഓഡിയോ തയ്യാറാക്കുന്നു…');
    try{
      const response=await fetch(path,{method:'HEAD',cache:'no-store'});
+     if(request!==trackRequest)return;
      if(!response.ok)throw Error('HTTP '+response.status);
      audio.src=path;audio.playbackRate=Number(speed.value);
-     status.textContent='Ready. Press Play; Android may show lock-screen media controls.';
+     status.textContent=message('Ready. Press Play to listen.','തയ്യാറായി. കേൾക്കാൻ പ്ലേ അമർത്തൂ.');
      if('mediaSession' in navigator){
        navigator.mediaSession.metadata=new MediaMetadata({title:'Daily Intelligence · 24 October 2026',artist:language.value==='ml'?'Malayalam edition':'English edition',album:depth.value==='full'?'Full newspaper':'News briefing'});
        navigator.mediaSession.setActionHandler('play',()=>audio.play());
@@ -159,8 +166,16 @@ if(supported){window.speechSynthesis.onvoiceschanged=updateVoiceHint}updateVoice
        navigator.mediaSession.setActionHandler('seekbackward',()=>{audio.currentTime=Math.max(0,audio.currentTime-15)});
        navigator.mediaSession.setActionHandler('seekforward',()=>{audio.currentTime=Math.min(audio.duration||Infinity,audio.currentTime+15)});
      }
-   }catch(e){status.textContent='MP3 not published yet. The original browser Read Aloud controls below are still available.';}
+     if(wasPlaying){try{await audio.play()}catch{status.textContent=message('Language changed. Press Play to continue.','ഭാഷ മാറി. കേൾക്കാൻ വീണ്ടും പ്ലേ അമർത്തൂ.')}}
+   }catch(e){if(request===trackRequest)status.textContent=message('Audio is unavailable right now.','ഇപ്പോൾ ഓഡിയോ ലഭ്യമല്ല.');}
  }
+ function syncAudioLanguage(){
+   const selected=currentLanguage();
+   if(language.value!==selected){language.value=selected;loadTrack()}
+ }
+ window.diSyncAudioLanguage=syncAudioLanguage;
+ document.getElementById('lang')?.addEventListener('change',syncAudioLanguage);
+
  language.addEventListener('change',loadTrack);depth.addEventListener('change',loadTrack);
  speed.addEventListener('change',()=>{audio.playbackRate=Number(speed.value)});
  audio.addEventListener('error',()=>{status.textContent='Audio unavailable. Try again after the audio build finishes.'});
@@ -265,12 +280,12 @@ if(window.diSettingsLocalize)window.diSettingsLocalize();
 text('#podcastPlayer h2',lang==='ml'?'ഇന്നത്തെ പത്രം കേൾക്കൂ':'Listen to today’s newspaper');text('#di-install',lang==='ml'?'⬇ ഇൻസ്റ്റാൾ':'⬇ Install');text('#di-listen-heading',lang==='ml'?'ഇന്നത്തെ വാർത്തകൾ കേൾക്കൂ':"Listen to today's news");if(window.diWeatherRender)window.diWeatherRender();text('#di-audio-caption',lang==='ml'?'സ്വാഭാവിക ശബ്ദം · സ്ക്രീൻ ലോക്കായാലും കേൾക്കാം':'Natural narration · Screen-off listening');text('label[for="podcastLanguage"]',t.podcastLanguage);text('label[for="podcastDepth"]',t.podcastLength);text('label[for="speed"]',t.speed);
 const en=document.querySelector('.mast .eyebrow');if(en)en.textContent=lang==='ml'?'സ്വതന്ത്ര പ്രഭാത വാർത്താപത്രം':'Independent morning newspaper';
 }
-document.getElementById('lang').addEventListener('change',localize);try{const saved=localStorage.getItem('di-language');if(saved==='en'||saved==='ml'){document.getElementById('lang').value=saved;setLanguage(saved)}}catch{}localize();
+document.getElementById('lang').addEventListener('change',localize);try{const saved=localStorage.getItem('di-language');if(saved==='en'||saved==='ml'){document.getElementById('lang').value=saved;setLanguage(saved);if(window.diSyncAudioLanguage)window.diSyncAudioLanguage()}}catch{}localize();
 })();
 </script><script>
 (function(){
  const mainLang=document.getElementById('lang'),audioLang=document.getElementById('podcastLanguage'),short=document.getElementById('short'),full=document.getElementById('full'),audioDepth=document.getElementById('podcastDepth');
- if(mainLang&&audioLang){audioLang.value=mainLang.value;mainLang.addEventListener('change',()=>{audioLang.value=mainLang.value;audioLang.dispatchEvent(new Event('change'))});audioLang.addEventListener('change',()=>{if(mainLang.value!==audioLang.value){mainLang.value=audioLang.value;mainLang.dispatchEvent(new Event('change'))}})}
+ if(mainLang&&audioLang){audioLang.value=mainLang.value;mainLang.addEventListener('change',()=>{audioLang.value=mainLang.value;if(window.diSyncAudioLanguage)window.diSyncAudioLanguage();else audioLang.dispatchEvent(new Event('change'))});audioLang.addEventListener('change',()=>{if(mainLang.value!==audioLang.value){mainLang.value=audioLang.value;mainLang.dispatchEvent(new Event('change'))}})}
  if(short&&full&&audioDepth){short.addEventListener('click',()=>{audioDepth.value='short';audioDepth.dispatchEvent(new Event('change'))});full.addEventListener('click',()=>{audioDepth.value='full';audioDepth.dispatchEvent(new Event('change'))})}
 })();
 </script><script>
