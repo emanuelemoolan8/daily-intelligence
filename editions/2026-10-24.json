@@ -1,0 +1,340 @@
+{
+  "date": "2026-10-24",
+  "cutoff": "Research performed 24 October 2026; sources dated 19–24 October; exact local cutoff time unavailable",
+  "translations": {
+    "en": {
+      "title": "The Daily Intelligence — 24 October 2026",
+      "intro": "A sourced news pilot covering Milan security, Kerala, AI research, and markets. Includes reported facts and clearly labeled analysis.",
+      "disclosure": "Real sourced reporting; pilot edition, not the complete 30–40-minute newspaper. Missing data and forecasts are disclosed.",
+      "sections": [
+        {
+          "heading": "Front Page",
+          "stories": [
+            {
+              "title": "Milan increases security ahead of European protests",
+              "brief": "Italy deployed 500 additional soldiers to Milan on 24 October as demonstrations were planned after last weekend's unrest.",
+              "full": "Associated Press reports reinforced policing, railway checks and drone surveillance. The demonstrations span distinct concerns, from cost of living to housing and pensions. Extra security is confirmed; whether it reduces clashes without worsening tensions is uncertain.",
+              "sources": [
+                {
+                  "url": "Associated Press, 24 Oct"
+                }
+              ]
+            },
+            {
+              "title": "Kerala governor's kitchen order sparks dispute",
+              "brief": "Kerala's new governor Om Prakash Mathur reportedly directed a vegetarian-only kitchen at Lok Bhavan, drawing criticism from Congress.",
+              "full": "The controversy concerns whether a governor's official residence should impose dietary restrictions and how such decisions intersect with Kerala's plural social traditions. Reports describe political criticism; this is not evidence of a statewide food policy.",
+              "sources": [
+                {
+                  "url": "India Today, 23 Oct"
+                }
+              ]
+            },
+            {
+              "title": "AI systems begin turning research papers into executable tools",
+              "brief": "Researchers are exploring ways to package scientific-paper code as reusable agent tools rather than relying on AI to recreate methods from scratch.",
+              "full": "Science News describes Paper2Agent, which tests paper-linked code against reference outputs and provides instructions to assistants. Reproducibility still depends on dataset access, dependencies, tests and expert review.",
+              "sources": [
+                {
+                  "url": "Science News, 22 Oct"
+                }
+              ]
+            },
+            {
+              "title": "Markets confront rotation away from technology shares",
+              "brief": "A recent market report described investors rotating toward industrial equities as oil prices pulled back and technology shares weakened.",
+              "full": "This is a report on a recent trading session, not a verified live quote for 24 October. No five-day or monthly market chart is provided because a consistent dated price series was not retrieved.",
+              "sources": [
+                {
+                  "url": "Yahoo Finance, 21 Oct"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "heading": "Major News Desk",
+          "stories": [
+            {
+              "title": "Italian authorities respond to Milan unrest",
+              "brief": "Prime Minister Giorgia Meloni convened security officials after violent unrest associated with cost-of-living demonstrations in Milan.",
+              "full": "ANSA reported injuries to officers and multiple detentions following the clashes. The underlying economic grievances and criminal acts should be assessed separately; attribution of coordinated external involvement remains contested.",
+              "sources": [
+                {
+                  "url": "ANSA, 19 Oct"
+                }
+              ]
+            },
+            {
+              "title": "Kollam investigation uncovers suspected counterfeit-note operation",
+              "brief": "Police investigating a disappearance found equipment and materials allegedly linked to counterfeit notes worth approximately ₹2.5 crore in Kollam.",
+              "full": "India Today reported a raid and detention. The value represents the reported suspected counterfeit material, not a judicial finding of guilt. Follow-up should distinguish police allegations from proven charges.",
+              "sources": [
+                {
+                  "url": "India Today, 24 Oct"
+                }
+              ]
+            },
+            {
+              "title": "AI software cloning raises intellectual-property and security questions",
+              "brief": "A new wave of AI-assisted reverse engineering is making software feature replication easier, according to an ABC analysis.",
+              "full": "Lower barriers may help interoperability and competition, but cloning can introduce licensing, security and provenance risks. Engineers should distinguish independently implemented compatible behavior from copied protected assets.",
+              "sources": [
+                {
+                  "url": "ABC, 22 Oct"
+                }
+              ]
+            },
+            {
+              "title": "European science-data initiative targets AI readiness",
+              "brief": "Frontiers pledged €1.6 million in support for preparing Horizon Europe research data for AI use.",
+              "full": "Its announced effort covers curation of 1,000 datasets and 100 data-publication grants. The pledge is a commitment, not evidence that all outputs are delivered or scientifically validated.",
+              "sources": [
+                {
+                  "url": "Frontiers, 19 Oct"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "heading": "Intelligence Desk",
+          "stories": [
+            {
+              "title": "Independent assessment",
+              "brief": "Milan's security response addresses immediate operational risk, not the underlying cost-of-living grievances.",
+              "full": "Separate public-safety measures from social policy. Track official implementation and independent reporting before concluding that a policy has succeeded.",
+              "sources": []
+            },
+            {
+              "title": "Forecast watch — subjective",
+              "brief": "65% probability that heightened security deployment in Milan continues for at least part of the next seven days.",
+              "full": "Resolution criterion: an official statement or independent report confirms continuing additional deployment by 31 October. Update trigger: an official withdrawal announcement. This is a judgment, not a reported fact.",
+              "sources": []
+            }
+          ]
+        },
+        {
+          "heading": "Markets, Local and Personal",
+          "stories": [
+            {
+              "title": "Markets confront rotation away from technology shares",
+              "brief": "A recent market report described investors rotating toward industrial equities as oil prices pulled back and technology shares weakened.",
+              "full": "This is a report on a recent trading session, not a verified live quote for 24 October. No five-day or monthly market chart is provided because a consistent dated price series was not retrieved.",
+              "sources": [
+                {
+                  "url": "Yahoo Finance, 21 Oct"
+                }
+              ]
+            },
+            {
+              "title": "Local-data verification limits",
+              "brief": "Sesto San Giovanni hourly weather and official alert status were not verified for this edition.",
+              "full": "Check official local advisories before travel. No personal Gmail or Calendar data was accessed; no live market prices or historical chart data were invented.",
+              "sources": []
+            }
+          ]
+        },
+        {
+          "heading": "Forward Desk",
+          "stories": [
+            {
+              "title": "AI systems begin turning research papers into executable tools",
+              "brief": "Researchers are exploring ways to package scientific-paper code as reusable agent tools rather than relying on AI to recreate methods from scratch.",
+              "full": "Science News describes Paper2Agent, which tests paper-linked code against reference outputs and provides instructions to assistants. Reproducibility still depends on dataset access, dependencies, tests and expert review.",
+              "sources": [
+                {
+                  "url": "Science News, 22 Oct"
+                }
+              ]
+            },
+            {
+              "title": "Engineering lesson: reproducible AI tools",
+              "brief": "Treat paper-derived agent tools as versioned software artifacts with explicit test fixtures and provenance.",
+              "full": "For production edge/cloud systems, pin dependencies, record artifact hashes, isolate execution, enforce access policies, log tool inputs and outputs, and maintain rollback paths.",
+              "sources": []
+            }
+          ]
+        },
+        {
+          "heading": "Editorial Audit",
+          "stories": [
+            {
+              "title": "Publication audit",
+              "brief": "This is a real-news pilot using cited reporting available on 24 October, including articles published earlier in the week.",
+              "full": "It is shorter than the original 30–40-minute editorial contract. Six independent forecasts, validated historical charts, and verified local weather are not present. Do not treat the short/full toggle as a measured duration.",
+              "sources": []
+            }
+          ]
+        }
+      ]
+    },
+    "ml": {
+      "title": "ദ ഡെയ്‌ലി ഇന്റലിജൻസ് — 24 ഒക്ടോബർ 2026",
+      "intro": "മിലാനിലെ സുരക്ഷ, കേരള വാർത്തകൾ, AI ഗവേഷണം, വിപണി എന്നിവയെക്കുറിച്ചുള്ള ഉറവിടങ്ങളോടുകൂടിയ പ്രത്യേക പതിപ്പ്.",
+      "disclosure": "ഇത് യഥാർത്ഥ വാർത്തകളാണ്; എന്നാൽ പൂർണ്ണ ദൈർഘ്യമുള്ള പതിപ്പല്ല. ചില വിവരങ്ങൾ പരിശോധിക്കാൻ കഴിഞ്ഞിട്ടില്ല.",
+      "sections": [
+        {
+          "heading": "പ്രധാന വാർത്തകൾ",
+          "stories": [
+            {
+              "title": "Milano rafforza la sicurezza prima delle proteste",
+              "brief": "Dopo i disordini dello scorso fine settimana, il 24 ottobre l'Italia ha inviato altri 500 militari a Milano.",
+              "full": "Secondo Associated Press sono previsti controlli ferroviari, sorveglianza con droni e più forze dell'ordine. Le proteste europee riguardano questioni diverse, come costo della vita, alloggi e pensioni.",
+              "sources": [
+                {
+                  "url": "Associated Press, 24 Oct"
+                }
+              ]
+            },
+            {
+              "title": "കേരള ഗവർണറുടെ അടുക്കള നിർദേശം വിവാദമായി",
+              "brief": "പുതിയ കേരള ഗവർണർ ഓം പ്രകാശ് മാഥൂർ ലോക്ഭവൻ അടുക്കളയിൽ സസ്യാഹാരം മാത്രം വേണമെന്ന് നിർദേശിച്ചതായി റിപ്പോർട്ട്.",
+              "full": "ഔദ്യോഗിക വസതിയിലെ ഭക്ഷണനിയന്ത്രണവും കേരളത്തിന്റെ വൈവിധ്യമാർന്ന സാമൂഹിക പാരമ്പര്യവും സംബന്ധിച്ച ചർച്ചയാണ് ഉയർന്നത്. ഇത് സംസ്ഥാനവ്യാപക ഭക്ഷണനയമല്ല.",
+              "sources": [
+                {
+                  "url": "India Today, 23 Oct"
+                }
+              ]
+            },
+            {
+              "title": "ഗവേഷണ പ്രബന്ധങ്ങളെ പ്രവർത്തിക്കുന്ന AI ഉപകരണങ്ങളാക്കാനുള്ള ശ്രമം",
+              "brief": "ഗവേഷണ പ്രബന്ധങ്ങളിലെ കോഡ് വീണ്ടും സൃഷ്ടിക്കുന്നതിനുപകരം പരിശോധിച്ച ഉപകരണങ്ങളായി AI ഏജന്റുകൾക്ക് ഉപയോഗിക്കാനുള്ള സമീപനമാണ് ഗവേഷകർ പരിശോധിക്കുന്നത്.",
+              "full": "Science News വിവരിക്കുന്ന Paper2Agent കോഡ് റഫറൻസ് ഫലങ്ങളുമായി പരിശോധിക്കുന്നു. ഡാറ്റ, ഡിപെൻഡൻസികൾ, ടെസ്റ്റുകൾ, വിദഗ്ധ പരിശോധന എന്നിവ ഇപ്പോഴും നിർണായകമാണ്.",
+              "sources": [
+                {
+                  "url": "Science News, 22 Oct"
+                }
+              ]
+            },
+            {
+              "title": "സാങ്കേതിക ഓഹരികളിൽ നിന്ന് നിക്ഷേപകരുടെ ശ്രദ്ധ മാറുന്നു",
+              "brief": "എണ്ണവില കുറഞ്ഞ സാഹചര്യത്തിൽ സാങ്കേതിക ഓഹരികളിൽ നിന്ന് വ്യാവസായിക കമ്പനികളിലേക്കുള്ള നിക്ഷേപമാറ്റം ഒരു പുതിയ വിപണി റിപ്പോർട്ട് വിവരിക്കുന്നു.",
+              "full": "ഇത് അടുത്തകാലത്തെ ഒരു ട്രേഡിംഗ് സെഷന്റെ റിപ്പോർട്ടാണ്; ഒക്ടോബർ 24-ലെ തത്സമയ നിരക്കല്ല. സ്ഥിരീകരിച്ച ചരിത്ര ഡാറ്റ ലഭിക്കാത്തതിനാൽ ചാർട്ട് നൽകിയിട്ടില്ല.",
+              "sources": [
+                {
+                  "url": "Yahoo Finance, 21 Oct"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "heading": "വിശദ വാർത്താ വിഭാഗം",
+          "stories": [
+            {
+              "title": "മിലാനിലെ സംഘർഷങ്ങൾക്ക് പിന്നാലെ സർക്കാർ സുരക്ഷാ നടപടികൾ",
+              "brief": "ജീവിതച്ചെലവിനെതിരായ പ്രതിഷേധങ്ങൾക്കിടെയുണ്ടായ അക്രമങ്ങൾക്ക് ശേഷം പ്രധാനമന്ത്രി ജോർജിയ മെലോണി സുരക്ഷാ ഉദ്യോഗസ്ഥരുമായി യോഗം ചേർന്നു.",
+              "full": "ANSA പ്രകാരം പൊലീസുകാർക്ക് പരിക്കേൽക്കുകയും നിരവധി പേരെ കസ്റ്റഡിയിലെടുക്കുകയും ചെയ്തു. സാമ്പത്തിക പരാതികളും അക്രമങ്ങളും പ്രത്യേകം വിലയിരുത്തണം.",
+              "sources": [
+                {
+                  "url": "ANSA, 19 Oct"
+                }
+              ]
+            },
+            {
+              "title": "കൊല്ലത്ത് വ്യാജനോട്ട് നിർമ്മാണ കേന്ദ്രമെന്ന് സംശയം",
+              "brief": "കാണാതായ വ്യക്തിയെക്കുറിച്ചുള്ള അന്വേഷണത്തിനിടെ കൊല്ലത്ത് ഏകദേശം 2.5 കോടി രൂപയുടെ വ്യാജനോട്ടുകളുമായി ബന്ധമുള്ളതായി സംശയിക്കുന്ന ഉപകരണങ്ങൾ പൊലീസ് കണ്ടെത്തി.",
+              "full": "ഇന്ത്യ ടുഡേ റിപ്പോർട്ട് പ്രകാരം റെയ്ഡും കസ്റ്റഡിയും നടന്നു. ഇത് പൊലീസ് അന്വേഷണഘട്ടത്തിലെ ആരോപണമാണ്; കുറ്റം കോടതിയിൽ തെളിയിച്ചതല്ല.",
+              "sources": [
+                {
+                  "url": "India Today, 24 Oct"
+                }
+              ]
+            },
+            {
+              "title": "AI ഉപയോഗിച്ചുള്ള സോഫ്റ്റ്‌വെയർ പകർപ്പുകൾ പുതിയ ചോദ്യങ്ങൾ ഉയർത്തുന്നു",
+              "brief": "AI സഹായത്തോടെ സോഫ്റ്റ്‌വെയറിന്റെ പ്രവർത്തനങ്ങൾ പുനർനിർമ്മിക്കുന്നത് എളുപ്പമാകുന്നതായി ABC റിപ്പോർട്ട് ചെയ്യുന്നു.",
+              "full": "ഇത് മത്സരം വർധിപ്പിച്ചേക്കാം; എന്നാൽ ലൈസൻസ്, സുരക്ഷ, ഉറവിട പരിശോധന എന്നിവയിൽ അപകടസാധ്യതയുണ്ട്. സ്വതന്ത്രമായി വികസിപ്പിച്ച അനുയോജ്യമായ പ്രവർത്തനവും പകർപ്പവകാശ ലംഘനവും വേർതിരിക്കണം.",
+              "sources": [
+                {
+                  "url": "ABC, 22 Oct"
+                }
+              ]
+            },
+            {
+              "title": "യൂറോപ്യൻ ഗവേഷണ ഡാറ്റ AI-ക്ക് അനുയോജ്യമാക്കാൻ പദ്ധതി",
+              "brief": "Horizon Europe ഗവേഷണ ഡാറ്റ AI ഉപയോഗത്തിന് തയ്യാറാക്കാൻ 1.6 മില്യൺ യൂറോയുടെ പിന്തുണ Frontiers പ്രഖ്യാപിച്ചു.",
+              "full": "1,000 ഡാറ്റാസെറ്റുകളുടെ ക്യൂറേഷനും 100 പ്രസിദ്ധീകരണ ഗ്രാന്റുകളും പദ്ധതിയിൽ ഉൾപ്പെടുന്നു. പ്രഖ്യാപനം പൂർത്തിയായ ഫലമായി കാണരുത്.",
+              "sources": [
+                {
+                  "url": "Frontiers, 19 Oct"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "heading": "വിശകലന വിഭാഗം",
+          "stories": [
+            {
+              "title": "സ്വതന്ത്ര വിലയിരുത്തൽ",
+              "brief": "മിലാനിലെ സുരക്ഷാ നടപടികൾ ഉടനടി പ്രതികരണമാണ്; ദീർഘകാല സാമൂഹിക പരിഹാരമല്ല.",
+              "full": "പ്രതിഷേധത്തിന്റെ കാരണങ്ങളും അക്രമങ്ങളും വ്യത്യസ്തമായി പരിശോധിക്കണം. നയഫലങ്ങൾ വിലയിരുത്താൻ ഔദ്യോഗിക റിപ്പോർട്ടുകൾ ആവശ്യമാണ്.",
+              "sources": []
+            },
+            {
+              "title": "സാധ്യതാ പ്രവചനങ്ങൾ — വിശകലനം മാത്രം",
+              "brief": "അടുത്ത ഏഴ് ദിവസത്തിനുള്ളിൽ മിലാനിലെ സുരക്ഷാ സാന്നിധ്യം തുടരുമെന്നതിന് 65% സബ്ജക്ടീവ് സാധ്യത.",
+              "full": "ഔദ്യോഗിക സേനാവിന്യാസം പിന്‍വലിക്കുന്നതായി അറിയിച്ചാൽ പ്രവചനം മാറും. ഇത് സ്ഥിരീകരിച്ച ഭാവി സംഭവമല്ല.",
+              "sources": []
+            }
+          ]
+        },
+        {
+          "heading": "വിപണി, പ്രാദേശിക വിവരങ്ങൾ",
+          "stories": [
+            {
+              "title": "സാങ്കേതിക ഓഹരികളിൽ നിന്ന് നിക്ഷേപകരുടെ ശ്രദ്ധ മാറുന്നു",
+              "brief": "എണ്ണവില കുറഞ്ഞ സാഹചര്യത്തിൽ സാങ്കേതിക ഓഹരികളിൽ നിന്ന് വ്യാവസായിക കമ്പനികളിലേക്കുള്ള നിക്ഷേപമാറ്റം ഒരു പുതിയ വിപണി റിപ്പോർട്ട് വിവരിക്കുന്നു.",
+              "full": "ഇത് അടുത്തകാലത്തെ ഒരു ട്രേഡിംഗ് സെഷന്റെ റിപ്പോർട്ടാണ്; ഒക്ടോബർ 24-ലെ തത്സമയ നിരക്കല്ല. സ്ഥിരീകരിച്ച ചരിത്ര ഡാറ്റ ലഭിക്കാത്തതിനാൽ ചാർട്ട് നൽകിയിട്ടില്ല.",
+              "sources": [
+                {
+                  "url": "Yahoo Finance, 21 Oct"
+                }
+              ]
+            },
+            {
+              "title": "പ്രാദേശിക വിവരങ്ങളുടെ പരിമിതി",
+              "brief": "സെസ്റ്റോ സാൻ ജോവന്നിയിലെ മണിക്കൂർ അടിസ്ഥാനത്തിലുള്ള കാലാവസ്ഥയും ഔദ്യോഗിക മുന്നറിയിപ്പുകളും പരിശോധിച്ചിട്ടില്ല.",
+              "full": "യാത്രകൾക്ക് മുമ്പ് പ്രാദേശിക ഔദ്യോഗിക അറിയിപ്പുകൾ പരിശോധിക്കുക. വ്യക്തിഗത ഇമെയിൽ അല്ലെങ്കിൽ കലണ്ടർ വിവരങ്ങൾ ഉപയോഗിച്ചിട്ടില്ല.",
+              "sources": []
+            }
+          ]
+        },
+        {
+          "heading": "മുന്നോട്ടുള്ള നിരീക്ഷണം",
+          "stories": [
+            {
+              "title": "ഗവേഷണ പ്രബന്ധങ്ങളെ പ്രവർത്തിക്കുന്ന AI ഉപകരണങ്ങളാക്കാനുള്ള ശ്രമം",
+              "brief": "ഗവേഷണ പ്രബന്ധങ്ങളിലെ കോഡ് വീണ്ടും സൃഷ്ടിക്കുന്നതിനുപകരം പരിശോധിച്ച ഉപകരണങ്ങളായി AI ഏജന്റുകൾക്ക് ഉപയോഗിക്കാനുള്ള സമീപനമാണ് ഗവേഷകർ പരിശോധിക്കുന്നത്.",
+              "full": "Science News വിവരിക്കുന്ന Paper2Agent കോഡ് റഫറൻസ് ഫലങ്ങളുമായി പരിശോധിക്കുന്നു. ഡാറ്റ, ഡിപെൻഡൻസികൾ, ടെസ്റ്റുകൾ, വിദഗ്ധ പരിശോധന എന്നിവ ഇപ്പോഴും നിർണായകമാണ്.",
+              "sources": [
+                {
+                  "url": "Science News, 22 Oct"
+                }
+              ]
+            },
+            {
+              "title": "എഞ്ചിനീയറിംഗ് കുറിപ്പ്: പുനരുത്പാദിപ്പിക്കാവുന്ന AI ടൂളുകൾ",
+              "brief": "ശാസ്ത്രീയ കോഡിനെ ഏജന്റ് ടൂളാക്കി മാറ്റുമ്പോൾ പതിപ്പ്, ഡാറ്റ, ടെസ്റ്റ് ഫലം എന്നിവ ബന്ധിപ്പിക്കണം.",
+              "full": "ഉത്പാദന സംവിധാനത്തിൽ ആർട്ടിഫാക്റ്റ് ഹാഷ്, ആശ്രിത പതിപ്പുകൾ, പരിശോധന ഫലം, റോള്ബാക്ക് പദ്ധതി എന്നിവ നിർബന്ധമാക്കുക.",
+              "sources": []
+            }
+          ]
+        },
+        {
+          "heading": "എഡിറ്റോറിയൽ പരിശോധന",
+          "stories": [
+            {
+              "title": "പ്രസിദ്ധീകരണ പരിശോധന",
+              "brief": "ഒക്ടോബർ 24-ലെ ഉറവിടങ്ങൾ ഉൾപ്പെടെ പുതിയതും പഴയതുമായ റിപ്പോർട്ടുകൾ ഉപയോഗിച്ചുള്ള പരിമിത പതിപ്പാണിത്.",
+              "full": "പൂർണ്ണ 30–40 മിനിറ്റ് വായന, ആറു പ്രവചനങ്ങൾ, യഥാർത്ഥ ചാർട്ടുകൾ, സ്ഥിരീകരിച്ച കാലാവസ്ഥ എന്നിവ ഈ പതിപ്പിൽ ഇല്ല. എല്ലാ വാർത്തകൾക്കും ഉറവിട ലിങ്കുകൾ നൽകിയിട്ടുണ്ട്.",
+              "sources": []
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
