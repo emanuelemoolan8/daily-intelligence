@@ -61,10 +61,10 @@ async function publishedEdition(){
  const r=await fetch(PUBLICATION_URL+'?check='+Math.floor(Date.now()/3600000),{headers:{'Cache-Control':'no-cache'}});
  if(!r.ok)throw Error('Publication status unavailable');
  const p=await r.json();
- if(!/^\\d{4}-\\d{2}-\\d{2}$/.test(p.date)||p.ready!==true||!Array.isArray(p.audio)||p.audio.length<4)throw Error('Edition not ready');
+ if(!new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$').test(p.date)||p.ready!==true||!Array.isArray(p.audio)||p.audio.length<4)throw Error('Edition not ready');
  const base='https://emanuelemoolan8.github.io/daily-intelligence/';
  for(const file of p.audio){
-  if(typeof file!=='string'||!/^audio\\/[a-zA-Z0-9._-]+\\.mp3$/.test(file))throw Error('Invalid audio path');
+  if(typeof file!=='string'||!file.startsWith('audio/')||!file.endsWith('.mp3')||file.includes('..')||file.includes('?'))throw Error('Invalid audio path');
  }
  const responses=await Promise.all([fetch(base+'index.html',{method:'HEAD',cache:'no-store'}),...p.audio.map(file=>fetch(base+file,{method:'HEAD',cache:'no-store'}))]);
  if(responses.some(r=>!r.ok))throw Error('Edition or audio missing');
