@@ -21,13 +21,37 @@ def edition():
         raise RuntimeError("Published edition data missing from index.html")
     return json.loads(unescape(match.group(1)))
 
+def spoken(text):
+    """Keep source facts unchanged while making narration easier to follow."""
+    text = re.sub(r"\\s+", " ", str(text)).strip()
+    return text
+
 def paragraphs(data, language, depth):
-    title = "Daily Intelligence. Today's newspaper." if language == "en" else "ഡെയ്‌ലി ഇന്റലിജൻസ്. ഇന്നത്തെ വാർത്തകൾ."
-    yield title
-    for story in data["stories"]:
-        yield story[f"{language}_title"] + ". " + story[f"{language}_summary"]
+    """Conversational framing; facts come only from the published edition."""
+    if language == "ml":
+        yield "നമസ്കാരം. ഡെയ്‌ലി ഇന്റലിജൻസിലേക്ക് സ്വാഗതം. ഇന്നത്തെ പ്രധാന വാർത്തകൾ നമുക്ക് ലളിതമായി നോക്കാം."
+        lead = ["ആദ്യം ഒരു പ്രധാന വാർത്ത.", "ഇനി മറ്റൊരു വാർത്ത നോക്കാം.", "അടുത്തതായി എന്താണ് സംഭവിച്ചതെന്ന് നോക്കാം.", "ഇനി ശ്രദ്ധിക്കേണ്ട മറ്റൊരു കാര്യം.", "അടുത്ത വാർത്തയിലേക്ക് പോകാം."]
+        detail = "ഇനി ഇതിനെക്കുറിച്ച് കുറച്ചുകൂടി വിശദമായി നോക്കാം."
+        ending = "ഇന്നത്തെ പ്രധാന വാർത്തകൾ ഇത്രയുമാണ്. കേട്ടതിന് നന്ദി. വീണ്ടും കാണാം."
+    else:
+        yield "Hello, and welcome to Daily Intelligence. Let's catch up on today's news, one story at a time."
+        lead = ["First, here's an important story.", "Now, let's look at another development.", "Here's what else is happening.", "Another story worth understanding.", "Let's move to the next story."]
+        detail = "Let's look at the details and why they matter."
+        ending = "That's our news roundup for today. Thanks for listening, and see you next time."
+    stories = data.get("stories", [])
+    for i, story in enumerate(stories):
+        yield lead[min(i, len(lead)-1)] if i < len(lead) else lead[i % len(lead)]
+        yield spoken(story[f"{language}_title"]) + ". " + spoken(story[f"{language}_summary"])
         if depth == "full":
-            yield from story.get("deep_en" if language == "en" else "deep_ml", [])
+            details = story.get("deep_en" if language == "en" else "deep_ml", [])
+            if isinstance(details, str):
+                details = [details]
+            if details:
+                yield detail
+                for paragraph in details:
+                    if spoken(paragraph):
+                        yield spoken(paragraph)
+    yield ending
 
 def chunks(parts, max_chars=1600):
     for part in parts:
@@ -44,7 +68,7 @@ def chunks(parts, max_chars=1600):
             yield part
 
 async def generate(language, depth, data):
-    output = OUT / f"2026-10-24-{language}-{depth}.mp3"
+    output = OUT / f"{data.get('edition_date', '2026-10-24')}-{language}-{depth}.mp3"
     segments = list(chunks(paragraphs(data, language, depth)))
     temporary = output.with_suffix(".mp3.tmp")
     with temporary.open("wb") as destination:
