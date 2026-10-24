@@ -1,1 +1,12 @@
-[{"date":"2026-10-24","title":"Website demonstration — NOT NEWS","file":"demo.json"}]
+[
+  {
+    "date": "2026-10-24",
+    "title": "Real news pilot — 24 October 2026",
+    "file": "2026-10-24.json"
+  },
+  {
+    "date": "2026-10-24",
+    "title": "Website demonstration — NOT NEWS",
+    "file": "demo.json"
+  }
+]
