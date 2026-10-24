@@ -301,6 +301,7 @@ const statusTexts={
  'di-listening-status':['Listening preference saved.','കേൾക്കാനുള്ള ക്രമീകരണം സേവ് ചെയ്തു.']
 };
 for(const [id,values] of Object.entries(statusTexts)){const el=document.getElementById(id);if(el&&el.textContent.trim())el.textContent=values[lang==='ml'?1:0]}
+const auditToggle=document.querySelector('#audit .di-audit-toggle');if(auditToggle){const expanded=auditToggle.getAttribute('aria-expanded')==='true';auditToggle.textContent=lang==='ml'?(expanded?'പരിശോധന മറയ്ക്കൂ':'പരിശോധന കാണൂ'):(expanded?'Hide editorial checks':'Show editorial checks')}
 if(window.diSettingsLocalize)window.diSettingsLocalize();
 text('#podcastPlayer h2',lang==='ml'?'ഇന്നത്തെ പത്രം കേൾക്കൂ':'Listen to today’s newspaper');text('#di-install',lang==='ml'?'⬇ ഇൻസ്റ്റാൾ':'⬇ Install');text('#di-listen-heading',lang==='ml'?'ഇന്നത്തെ വാർത്തകൾ കേൾക്കൂ':"Listen to today's news");if(window.diWeatherRender)window.diWeatherRender();text('#di-audio-caption',lang==='ml'?'സ്വാഭാവിക ശബ്ദം · സ്ക്രീൻ ലോക്കായാലും കേൾക്കാം':'Natural narration · Screen-off listening');text('label[for="podcastLanguage"]',t.podcastLanguage);text('label[for="podcastDepth"]',t.podcastLength);text('label[for="speed"]',t.speed);
 const en=document.querySelector('.mast .eyebrow');if(en)en.textContent=lang==='ml'?'സ്വതന്ത്ര പ്രഭാത വാർത്താപത്രം':'Independent morning newspaper';
