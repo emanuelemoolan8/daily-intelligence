@@ -223,7 +223,7 @@ document.getElementById('lang').addEventListener('change',localize);try{const sa
 </script><script>
 (function(){
  const $=id=>document.getElementById(id),cityInput=$('di-city'),state=$('di-weather-state'),label=$('di-weather-label'),now=$('di-weather-now'),hint=$('di-weather-hint'),hourly=$('di-weather-hourly');
- const codeText=(n,ml)=>{if(n===0)return ml?'തെളിഞ്ഞ ആകാശം':'Clear';if(n<=3)return ml?'ഭാഗികമായി മേഘാവൃതം':'Partly cloudy';if(n===45||n===48)return ml?'മൂടൽമഞ്ഞ്':'Fog';if(n>=51&&n<=67)return ml?'മഴ':'Rain';if(n>=71&&n<=77)return ml?'മഞ്ഞുവീഴ്ച':'Snow';if(n>=80&&n<=82)return ml?'മഴ':'Showers';if(n>=95)return ml?'ഇടിമിന്നൽ':'Thunderstorms';return ml?'മേഘാവൃതം':'Cloudy'};
+ const codeText=(n,ml)=>{if(n===0)return ml?'ആകാശം തെളിഞ്ഞിരിക്കുന്നു':'Clear';if(n<=3)return ml?'ആകാശത്ത് കുറച്ച് മേഘങ്ങളുണ്ട്':'Partly cloudy';if(n===45||n===48)return ml?'മഞ്ഞ് മൂടിയിരിക്കുന്നു':'Fog';if(n>=51&&n<=67)return ml?'മഴ':'Rain';if(n>=71&&n<=77)return ml?'മഞ്ഞ് പെയ്യുന്നു':'Snow';if(n>=80&&n<=82)return ml?'മഴ':'Showers';if(n>=95)return ml?'ഇടിയും മിന്നലും':'Thunderstorms';return ml?'ആകാശം മേഘം മൂടിയിരിക്കുന്നു':'Cloudy'};
  const icon=n=>n===0?'☀️':n<=3?'⛅':n<=48?'🌫️':n<=67?'🌧️':n<=77?'🌨️':n<=82?'🌦️':'⛈️';
  let forecast=null,place='',requestId=0;
  function render(){
