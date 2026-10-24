@@ -18,12 +18,31 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Determine Rome edition date
+        id: edition
+        run: echo "date=$(TZ=Europe/Rome date +%F)" >> "$GITHUB_OUTPUT"
+      - name: Restore validated research
+        uses: actions/cache/restore@v4
+        with:
+          path: .cache
+          key: edition-${{ steps.edition.outputs.date }}-v2
+      - name: Validate publisher without API usage
+        env:
+          DRY_RUN: 'true'
+        run: python scripts/publish.py
       - name: Research and generate edition
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          OPENAI_MODEL: gpt-4.1
+          OPENAI_RESEARCH_MODEL: gpt-4.1-mini
+          OPENAI_TRANSLATE_MODEL: gpt-4.1-mini
           SCHEDULED: ${{ github.event_name == 'schedule' }}
         run: python scripts/publish.py
+      - name: Save validated research even if translation fails
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: .cache
+          key: edition-${{ steps.edition.outputs.date }}-v2
       - name: Commit edition
         run: |
           git config user.name 'github-actions[bot]'
