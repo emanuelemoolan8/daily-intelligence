@@ -75,6 +75,7 @@ def main():
         return
     obj = call_openai()
     validate(obj)
+    output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(obj, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     manifest_path = ROOT / 'editions/index.json'
     manifest = json.loads(manifest_path.read_text(encoding='utf-8'))
