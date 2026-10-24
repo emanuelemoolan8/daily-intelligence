@@ -1,0 +1,19 @@
+{
+  "id": "/daily-intelligence/",
+  "name": "Daily Intelligence — Your Morning Newspaper",
+  "short_name": "Daily Intelligence",
+  "description": "A clear, engaging daily newspaper with bilingual reading and audio.",
+  "start_url": "/daily-intelligence/",
+  "scope": "/daily-intelligence/",
+  "display": "standalone",
+  "background_color": "#f4f6fa",
+  "theme_color": "#101d31",
+  "icons": [
+    {
+      "src": "app-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
