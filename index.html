@@ -20,6 +20,8 @@ function showTab(name){for(const tab of document.querySelectorAll('.tab')){const
 document.querySelectorAll('.tab').forEach(tab=>tab.addEventListener('click',()=>showTab(tab.dataset.tab)));
 showTab(['today','archive','settings'].includes(location.hash.slice(1))?location.hash.slice(1):'today');
 window.addEventListener('hashchange',()=>{const name=location.hash.slice(1);if(['today','archive','settings'].includes(name))showTab(name)});
+const newspaper=document.getElementById('newspaper');
+newspaper.addEventListener('load',()=>{try{const doc=newspaper.contentDocument;const resize=()=>{const height=Math.max(doc.documentElement.scrollHeight,doc.body.scrollHeight);if(height>500)newspaper.style.height=height+'px'};resize();if('ResizeObserver'in window)new ResizeObserver(resize).observe(doc.body);doc.addEventListener('click',()=>requestAnimationFrame(resize));setTimeout(resize,1000)}catch(e){/* Fall back to the scrollable reader when embedding is restricted. */}});
 const TOPICS=['World news','Italy & local','India & Kerala','Business & markets','AI & technology','Science & health','Software engineering'];
 const DEFAULT={apiBase:'https://daily-intelligence-api.moolanemanuelethomas.workers.dev',language:'en',city:'Sesto San Giovanni, Italy',morning:'08:00',topics:TOPICS.slice()};
 let settings;try{settings={...DEFAULT,...JSON.parse(localStorage.getItem('di-settings')||'{}')}}catch(e){settings={...DEFAULT}};
