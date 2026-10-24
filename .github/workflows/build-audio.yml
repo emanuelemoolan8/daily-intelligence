@@ -1,0 +1,29 @@
+name: Build offline newspaper audio
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'daily_intelligence_2026-10-24_bilingual_listen.html'
+      - 'scripts/build_audio.py'
+permissions:
+  contents: write
+jobs:
+  audio:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Install speech and audio tools
+        run: sudo apt-get update && sudo apt-get install -y espeak-ng ffmpeg
+      - name: Build English and Malayalam short/full MP3
+        run: python3 scripts/build_audio.py
+      - name: Publish generated MP3 files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add audio/*.mp3
+          if ! git diff --cached --quiet; then
+            git commit -m "Generate offline bilingual newspaper audio"
+            git push
+          fi
