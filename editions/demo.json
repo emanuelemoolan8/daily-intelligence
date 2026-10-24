@@ -1,0 +1,152 @@
+{
+  "date": "2026-10-24",
+  "cutoff": "No reporting performed; demonstration only",
+  "translations": {
+    "en": {
+      "title": "Website demonstration — not a news edition",
+      "intro": "The bilingual reader, archive and audio interface are ready for real editions.",
+      "disclosure": "This sample is not a 10-minute or 30–40-minute news briefing.",
+      "sections": [
+        {
+          "heading": "Front Page",
+          "stories": [
+            {
+              "title": "Demonstration content — no current news",
+              "brief": "This is a placeholder for a verified, cited daily edition. No claims about current events are made.",
+              "full": "A published edition should contain original reporting synthesis, sourced context, limitations and relevant analysis.",
+              "sources": []
+            }
+          ]
+        },
+        {
+          "heading": "Major News Desk",
+          "stories": [
+            {
+              "title": "Demonstration content — no current news",
+              "brief": "This is a placeholder for a verified, cited daily edition. No claims about current events are made.",
+              "full": "A published edition should contain original reporting synthesis, sourced context, limitations and relevant analysis.",
+              "sources": []
+            }
+          ]
+        },
+        {
+          "heading": "Intelligence Desk",
+          "stories": [
+            {
+              "title": "Demonstration content — no current news",
+              "brief": "This is a placeholder for a verified, cited daily edition. No claims about current events are made.",
+              "full": "A published edition should contain original reporting synthesis, sourced context, limitations and relevant analysis.",
+              "sources": []
+            }
+          ]
+        },
+        {
+          "heading": "Markets, Local and Personal",
+          "stories": [
+            {
+              "title": "Demonstration content — no current news",
+              "brief": "This is a placeholder for a verified, cited daily edition. No claims about current events are made.",
+              "full": "A published edition should contain original reporting synthesis, sourced context, limitations and relevant analysis.",
+              "sources": []
+            }
+          ]
+        },
+        {
+          "heading": "Forward Desk",
+          "stories": [
+            {
+              "title": "Demonstration content — no current news",
+              "brief": "This is a placeholder for a verified, cited daily edition. No claims about current events are made.",
+              "full": "A published edition should contain original reporting synthesis, sourced context, limitations and relevant analysis.",
+              "sources": []
+            }
+          ]
+        },
+        {
+          "heading": "Editorial Audit",
+          "stories": [
+            {
+              "title": "Demonstration content — no current news",
+              "brief": "This is a placeholder for a verified, cited daily edition. No claims about current events are made.",
+              "full": "A published edition should contain original reporting synthesis, sourced context, limitations and relevant analysis.",
+              "sources": []
+            }
+          ]
+        }
+      ]
+    },
+    "ml": {
+      "title": "വെബ്സൈറ്റ് മാതൃക — വാർത്താ പതിപ്പല്ല",
+      "intro": "ഇംഗ്ലീഷിലും മലയാളത്തിലും വായിക്കാനും കേൾക്കാനുമുള്ള സൗകര്യത്തിന്റെ മാതൃകയാണിത്.",
+      "disclosure": "ഇത് പത്ത് മിനിറ്റോ മുപ്പത് മിനിറ്റോ നീളുന്ന വാർത്താ പതിപ്പല്ല.",
+      "sections": [
+        {
+          "heading": "പ്രധാന വാർത്തകൾ",
+          "stories": [
+            {
+              "title": "പ്രദർശന ഉള്ളടക്കം — പുതിയ വാർത്തയല്ല",
+              "brief": "ഇത് സ്ഥിരീകരിച്ച വാർത്തകൾക്കുള്ള മാതൃകാ സ്ഥലം മാത്രമാണ്. ഇന്നത്തെ സംഭവങ്ങളെക്കുറിച്ചുള്ള അവകാശവാദങ്ങൾ ഇവിടെ ഇല്ല.",
+              "full": "പ്രസിദ്ധീകരിക്കുന്ന പതിപ്പിൽ ഉറവിടങ്ങൾ, പശ്ചാത്തലം, വിശകലനം, പരിമിതികൾ എന്നിവ വ്യക്തമാക്കണം.",
+              "sources": []
+            }
+          ]
+        },
+        {
+          "heading": "പ്രധാന വാർത്താ വിഭാഗം",
+          "stories": [
+            {
+              "title": "പ്രദർശന ഉള്ളടക്കം — പുതിയ വാർത്തയല്ല",
+              "brief": "ഇത് സ്ഥിരീകരിച്ച വാർത്തകൾക്കുള്ള മാതൃകാ സ്ഥലം മാത്രമാണ്. ഇന്നത്തെ സംഭവങ്ങളെക്കുറിച്ചുള്ള അവകാശവാദങ്ങൾ ഇവിടെ ഇല്ല.",
+              "full": "പ്രസിദ്ധീകരിക്കുന്ന പതിപ്പിൽ ഉറവിടങ്ങൾ, പശ്ചാത്തലം, വിശകലനം, പരിമിതികൾ എന്നിവ വ്യക്തമാക്കണം.",
+              "sources": []
+            }
+          ]
+        },
+        {
+          "heading": "വിശകലന വിഭാഗം",
+          "stories": [
+            {
+              "title": "പ്രദർശന ഉള്ളടക്കം — പുതിയ വാർത്തയല്ല",
+              "brief": "ഇത് സ്ഥിരീകരിച്ച വാർത്തകൾക്കുള്ള മാതൃകാ സ്ഥലം മാത്രമാണ്. ഇന്നത്തെ സംഭവങ്ങളെക്കുറിച്ചുള്ള അവകാശവാദങ്ങൾ ഇവിടെ ഇല്ല.",
+              "full": "പ്രസിദ്ധീകരിക്കുന്ന പതിപ്പിൽ ഉറവിടങ്ങൾ, പശ്ചാത്തലം, വിശകലനം, പരിമിതികൾ എന്നിവ വ്യക്തമാക്കണം.",
+              "sources": []
+            }
+          ]
+        },
+        {
+          "heading": "വിപണി, പ്രാദേശിക, വ്യക്തിഗത വിവരങ്ങൾ",
+          "stories": [
+            {
+              "title": "പ്രദർശന ഉള്ളടക്കം — പുതിയ വാർത്തയല്ല",
+              "brief": "ഇത് സ്ഥിരീകരിച്ച വാർത്തകൾക്കുള്ള മാതൃകാ സ്ഥലം മാത്രമാണ്. ഇന്നത്തെ സംഭവങ്ങളെക്കുറിച്ചുള്ള അവകാശവാദങ്ങൾ ഇവിടെ ഇല്ല.",
+              "full": "പ്രസിദ്ധീകരിക്കുന്ന പതിപ്പിൽ ഉറവിടങ്ങൾ, പശ്ചാത്തലം, വിശകലനം, പരിമിതികൾ എന്നിവ വ്യക്തമാക്കണം.",
+              "sources": []
+            }
+          ]
+        },
+        {
+          "heading": "വരാനിരിക്കുന്ന കാര്യങ്ങൾ",
+          "stories": [
+            {
+              "title": "പ്രദർശന ഉള്ളടക്കം — പുതിയ വാർത്തയല്ല",
+              "brief": "ഇത് സ്ഥിരീകരിച്ച വാർത്തകൾക്കുള്ള മാതൃകാ സ്ഥലം മാത്രമാണ്. ഇന്നത്തെ സംഭവങ്ങളെക്കുറിച്ചുള്ള അവകാശവാദങ്ങൾ ഇവിടെ ഇല്ല.",
+              "full": "പ്രസിദ്ധീകരിക്കുന്ന പതിപ്പിൽ ഉറവിടങ്ങൾ, പശ്ചാത്തലം, വിശകലനം, പരിമിതികൾ എന്നിവ വ്യക്തമാക്കണം.",
+              "sources": []
+            }
+          ]
+        },
+        {
+          "heading": "എഡിറ്റോറിയൽ പരിശോധന",
+          "stories": [
+            {
+              "title": "പ്രദർശന ഉള്ളടക്കം — പുതിയ വാർത്തയല്ല",
+              "brief": "ഇത് സ്ഥിരീകരിച്ച വാർത്തകൾക്കുള്ള മാതൃകാ സ്ഥലം മാത്രമാണ്. ഇന്നത്തെ സംഭവങ്ങളെക്കുറിച്ചുള്ള അവകാശവാദങ്ങൾ ഇവിടെ ഇല്ല.",
+              "full": "പ്രസിദ്ധീകരിക്കുന്ന പതിപ്പിൽ ഉറവിടങ്ങൾ, പശ്ചാത്തലം, വിശകലനം, പരിമിതികൾ എന്നിവ വ്യക്തമാക്കണം.",
+              "sources": []
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
