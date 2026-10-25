@@ -2,7 +2,7 @@ name: Validate Daily Intelligence UI
 on:
   pull_request:
   push:
-    branches: [main, feature/recorded-mp3-2026-10-25]
+    branches: [main]
 jobs:
   contract:
     runs-on: ubuntu-24.04
@@ -22,7 +22,7 @@ jobs:
       - name: Check public Pages and speech synthesis calls
         run: node test/live-pages-tts.mjs
   recordings:
-    if: github.ref == 'refs/heads/feature/recorded-mp3-2026-10-25' && github.event_name == 'push'
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-24.04
     permissions:
       contents: write
