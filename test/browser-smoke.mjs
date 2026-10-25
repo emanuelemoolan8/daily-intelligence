@@ -1,0 +1,31 @@
+import {chromium} from 'playwright';
+import {createServer} from 'node:http';
+import {readFileSync,statSync} from 'node:fs';
+import {resolve,extname,sep} from 'node:path';
+import assert from 'node:assert/strict';
+const root=process.cwd();
+const mime={'.html':'text/html','.js':'text/javascript','.css':'text/css','.json':'application/json','.webmanifest':'application/manifest+json','.svg':'image/svg+xml'};
+const server=createServer((req,res)=>{const url=new URL(req.url,'http://localhost');let file=resolve(root,'.'+decodeURIComponent(url.pathname));if(!file.startsWith(root+sep)&&file!==root){res.writeHead(403).end();return}try{if(statSync(file).isDirectory())file=resolve(file,'index.html');res.writeHead(200,{'Content-Type':mime[extname(file)]||'application/octet-stream'});res.end(readFileSync(file))}catch{res.writeHead(404).end()}});
+await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
+let browser;
+try{
+ browser=await chromium.launch({headless:true,args:['--no-sandbox']});
+ const page=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
+ const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.goto('http://127.0.0.1:'+server.address().port+'/',{waitUntil:'domcontentloaded'});
+ await page.waitForSelector('.headline',{timeout:12000});
+ assert.equal(await page.locator('.headline').count(),12,'All twelve 25 October headlines render');
+ assert.match(await page.locator('body').innerText(),/Saudi oil routes face a fresh security test/);
+ assert.equal(await page.locator('#di-italian-play').isVisible(),true,'Listening controls are visible');
+ await page.locator('#lang').selectOption('it');
+ assert.match(await page.locator('body').innerText(),/Le rotte petrolifere saudite affrontano nuovi rischi/);
+ await page.locator('#lang').selectOption('ml');
+ assert.match(await page.locator('body').innerText(),/മലയാളം|സൗദി/);
+ await page.locator('#lang').selectOption('en');
+ await page.locator('#full').click();
+ assert.equal(await page.locator('#full').getAttribute('aria-pressed'),'true');
+ await page.locator('#short').click();
+ assert.equal(await page.locator('#short').getAttribute('aria-pressed'),'true');
+ assert.deepEqual(errors,[],'No uncaught browser errors');
+ console.log('Mobile browser smoke checks passed');
+}finally{if(browser)await browser.close();await new Promise(resolve=>server.close(resolve))}
