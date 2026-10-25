@@ -115,7 +115,7 @@ $('#countEn').textContent=D.counts.en.toLocaleString()+' English editorial words
 const supported=('speechSynthesis' in window)&&('SpeechSynthesisUtterance' in window);let groups=[],groupIndex=0,chunkIndex=0,chunks=[],paused=false,playing=false,runId=0;
 function splitSpeech(text){const out=[];for(const p of String(text).split(/(?<=[.!?।])\s+/u)){if(!p.trim())continue;if(p.length<=210){out.push(p);continue}const words=p.split(/\s+/),buf=[];let line='';for(const w of words){if((line+' '+w).length>195&&line){buf.push(line);line=w}else line+=(line?' ':'')+w}if(line)buf.push(line);out.push(...buf)}return out}
 function buildGroups(){
- if(lang==='it'){return D.stories.map((story,i)=>({title:italianHeadlines[i][0],parts:[italianHeadlines[i][0],italianHeadlines[i][1],...(mode==='full'?story.deep_en:[]),...(mode==='full'?[story.context_en,story.watch_en]:[])].flatMap(splitSpeech)}))}
+ if(lang==='it'){return D.stories.map((story,i)=>({title:italianHeadlines[i][0],parts:[italianHeadlines[i][0],italianHeadlines[i][1],].flatMap(splitSpeech)}))}
  const x=[];const L=(en,ml)=>lang==='ml'?ml:en;
  const g=(title,items)=>x.push({title,parts:items.filter(Boolean).flatMap(splitSpeech)});
  g(L('Front page — twelve verified headlines','പ്രധാന പേജ് — പന്ത്രണ്ട് വാർത്തകൾ'),[L('Twelve ranked verified stories. Use Next to move story by story.','പ്രാധാന്യമനുസരിച്ച് പന്ത്രണ്ട് വാർത്തകൾ. അടുത്ത വാർത്തയിലേക്ക് പോകാൻ Next അമർത്തുക.')]);
