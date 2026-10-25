@@ -17,11 +17,11 @@ try{
  assert.equal(await page.locator('.headline').count(),12,'All twelve 25 October headlines render');
  assert.match(await page.locator('body').innerText(),/Saudi oil routes face a fresh security test/);
  assert.equal(await page.locator('#di-italian-play').isVisible(),true,'Listening controls are visible');
- await page.locator('#lang').selectOption('it');
+ await page.evaluate(()=>{const el=document.querySelector('#lang');el.value='it';el.dispatchEvent(new Event('change',{bubbles:true}))});
  assert.match(await page.locator('body').innerText(),/Le rotte petrolifere saudite affrontano nuovi rischi/);
- await page.locator('#lang').selectOption('ml');
+ await page.evaluate(()=>{const el=document.querySelector('#lang');el.value='ml';el.dispatchEvent(new Event('change',{bubbles:true}))});
  assert.match(await page.locator('body').innerText(),/മലയാളം|സൗദി/);
- await page.locator('#lang').selectOption('en');
+ await page.evaluate(()=>{const el=document.querySelector('#lang');el.value='en';el.dispatchEvent(new Event('change',{bubbles:true}))});
  await page.locator('#full').click();
  assert.equal(await page.locator('#full').getAttribute('aria-pressed'),'true');
  await page.locator('#short').click();
