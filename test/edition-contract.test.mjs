@@ -31,3 +31,7 @@ assert(legacy25.includes('location.replace'), 'Old 25 October URL must forward t
 assert(!legacy25.includes('class="desk"'), 'Old 25 October URL must not duplicate newspaper UI');
 assert(html.includes('italian.hidden=false;audio.hidden=true'), 'Speech controls must remain visible for every language');
 assert(html.includes('Screen-off playback not guaranteed'), 'Avoid promising unsupported background TTS');
+
+assert(html.includes('Le rotte petrolifere saudite affrontano nuovi rischi'),'Italian edition must match October 25 first story');
+assert(!html.includes('italianArticleContent'),'Outdated Italian long-form article data must be removed');
+assert(html.includes('ANALISI (testo inglese)'),'Untranslated deep analysis must be labelled');
