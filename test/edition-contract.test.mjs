@@ -7,7 +7,7 @@ assert(!/http-equiv=["']refresh["']/i.test(html),'Homepage must never redirect t
 assert(html.includes('di-floating-nav'),'Floating navigation missing');
 assert(html.includes('id="di-settings"'),'Settings view missing');
 assert(html.includes('id="podcastPlayer"'),'Audio player missing');
-assert(html.includes('src="./editions/2026-10-25.js"'),'Expected edition data loader missing');
+assert(html.includes('src="./editions/latest.js"'),'Expected latest edition loader missing');
 for(const date of ['2026-10-24','2026-10-25']){
  const source=readFileSync('editions/'+date+'.js','utf8');
  const ctx={window:{}};
