@@ -21,3 +21,7 @@ for(const date of ['2026-10-24','2026-10-25']){
  }
 }
 console.log('Canonical UI and edition data checks passed');
+
+assert(!html.includes("audio/2026-10-24-"),'Must not play previous edition MP3 on October 25');
+assert(html.includes("audio/2026-10-25-"),'Current-edition audio path missing');
+assert(!html.includes('Brent closed at $116.72, Ukraine and Russia agreed'),'Stale lead paragraph detected');
