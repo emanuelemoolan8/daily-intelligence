@@ -16,6 +16,6 @@ jobs:
       - name: Install Chromium browser test runner
         run: |
           npm install --no-save playwright@1.56.1
-          npx playwright install --with-deps chromium
+          npx playwright install chromium
       - name: Test mobile UI in Chromium
         run: node test/browser-smoke.mjs
