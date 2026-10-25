@@ -166,7 +166,7 @@ if(supported){window.speechSynthesis.onvoiceschanged=updateVoiceHint}updateVoice
 (function(){
  const audio=document.getElementById('podcastAudio'),status=document.getElementById('podcastStatus');
  const language=document.getElementById('podcastLanguage'),depth=document.getElementById('podcastDepth'),speed=document.getElementById('podcastSpeed');
- const file=()=> language.value==='it'?null:'audio/2026-10-25-'+language.value+'-'+depth.value+'.mp3';
+ const file=()=>null; // 25 October MP3 not yet verified; speech playback remains available through reading controls.
  let trackRequest=0;
  const currentLanguage=()=>['en','ml','it'].includes(document.getElementById('lang')?.value)?document.getElementById('lang').value:'en';
  const message=(en,ml)=>currentLanguage()==='ml'?ml:en;
@@ -175,7 +175,7 @@ if(supported){window.speechSynthesis.onvoiceschanged=updateVoiceHint}updateVoice
    const wasPlaying=!audio.paused&&!audio.ended;
    audio.pause();audio.removeAttribute('src');audio.load();
    const path=file();
-   const italian=document.getElementById('di-italian-tts');italian.hidden=language.value!=='it';audio.hidden=language.value==='it';if(!path){status.textContent='Italiano · Premi Ascolta per iniziare.';return;}
+   const italian=document.getElementById('di-italian-tts');italian.hidden=language.value!=='it';audio.hidden=true;if(!path){status.textContent=message('Recorded audio is not available for this edition. Use the reading controls for text-to-speech.','ഈ പതിപ്പിന് റെക്കോർഡ് ചെയ്ത ഓഡിയോ ലഭ്യമല്ല. ടെക്സ്റ്റ് വായന ഉപയോഗിക്കുക.');return;}
    status.textContent=message('Loading '+(language.value==='ml'?'Malayalam':'English')+' audio…','ഓഡിയോ തയ്യാറാക്കുന്നു…');
    try{
      const response=await fetch(path,{method:'HEAD',cache:'no-store'});
