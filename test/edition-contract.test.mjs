@@ -7,7 +7,7 @@ assert(!/http-equiv=["']refresh["']/i.test(html),'Homepage must never redirect t
 assert(html.includes('di-floating-nav'),'Floating navigation missing');
 assert(html.includes('id="di-settings"'),'Settings view missing');
 assert(html.includes('id="podcastPlayer"'),'Audio player missing');
-assert(html.includes('src="./editions/2026-10-25.js"'),'Expected edition data loader missing');
+assert(html.includes('src="./editions/latest.js"'),'Expected latest edition loader missing');
 for(const date of ['2026-10-24','2026-10-25']){
  const source=readFileSync('editions/'+date+'.js','utf8');
  const ctx={window:{}};
@@ -38,3 +38,7 @@ assert(html.includes('ANALISI (testo inglese)'),'Untranslated deep analysis must
 
 assert(html.includes('./audio/2026-10-25/${language.value}-${depth.value}.mp3'),'MP3 track resolver must use edition and controls');
 assert(html.includes('audio.hidden=false;italian.hidden=true'),'Only show recorded MP3 player when file exists');
+
+const latest=readFileSync('editions/latest.js','utf8');
+assert(html.includes('<script src="./editions/latest.js"></script>'),'Canonical UI must load latest edition pointer');
+assert(latest.includes('editions/2026-10-25.js'),'Latest pointer must select most recent published edition');

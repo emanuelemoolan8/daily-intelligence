@@ -1,11 +1,13 @@
 name: Generate 25 October MP3 recordings
 on:
   push:
-    branches: [feature/recorded-mp3-2026-10-25]
+    branches: [main]
     paths:
       - 'scripts/build-audio-scripts.mjs'
       - 'scripts/generate-audio.py'
       - '.github/workflows/generate-mp3.yml'
+      - 'editions/**'
+      - 'index.html'
   workflow_dispatch:
 permissions:
   contents: write
@@ -28,8 +30,6 @@ jobs:
         run: python scripts/generate-audio.py
       - name: Verify audio files
         run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y ffmpeg
           for f in audio/2026-10-25/*.mp3; do ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1 "$f"; done
           test "$(find audio/2026-10-25 -name '*.mp3' | wc -l)" -eq 6
       - name: Commit generated recordings to feature branch
