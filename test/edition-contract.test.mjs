@@ -35,3 +35,6 @@ assert(html.includes('Screen-off playback not guaranteed'), 'Avoid promising uns
 assert(html.includes('Le rotte petrolifere saudite affrontano nuovi rischi'),'Italian edition must match October 25 first story');
 assert(!html.includes('italianArticleContent'),'Outdated Italian long-form article data must be removed');
 assert(html.includes('ANALISI (testo inglese)'),'Untranslated deep analysis must be labelled');
+
+assert(html.includes('./audio/2026-10-25/${language.value}-${depth.value}.mp3'),'MP3 track resolver must use edition and controls');
+assert(html.includes('audio.hidden=false;italian.hidden=true'),'Only show recorded MP3 player when file exists');

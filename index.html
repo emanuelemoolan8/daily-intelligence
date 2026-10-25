@@ -152,7 +152,7 @@ if(supported){window.speechSynthesis.onvoiceschanged=updateVoiceHint}updateVoice
 (function(){
  const audio=document.getElementById('podcastAudio'),status=document.getElementById('podcastStatus');
  const language=document.getElementById('podcastLanguage'),depth=document.getElementById('podcastDepth'),speed=document.getElementById('podcastSpeed');
- const file=()=>null; // 25 October MP3 not yet verified; speech playback remains available through reading controls.
+ const file=()=>`./audio/2026-10-25/${language.value}-${depth.value}.mp3`; // Show player only after the recording responds successfully.
  let trackRequest=0;
  const currentLanguage=()=>['en','ml','it'].includes(document.getElementById('lang')?.value)?document.getElementById('lang').value:'en';
  const message=(en,ml)=>currentLanguage()==='ml'?ml:en;
@@ -167,7 +167,7 @@ if(supported){window.speechSynthesis.onvoiceschanged=updateVoiceHint}updateVoice
      const response=await fetch(path,{method:'HEAD',cache:'no-store'});
      if(request!==trackRequest)return;
      if(!response.ok)throw Error('HTTP '+response.status);
-     audio.src=path;audio.playbackRate=Number(speed.value);
+     audio.src=path;audio.playbackRate=Number(speed.value);audio.hidden=false;italian.hidden=true;document.getElementById('di-audio-caption').textContent='Recorded MP3 · Background media playback supported by browser';
      status.textContent=message('Ready. Press Play to listen.','തയ്യാറായി. കേൾക്കാൻ പ്ലേ അമർത്തൂ.');
      if('mediaSession' in navigator){
        navigator.mediaSession.metadata=new MediaMetadata({title:'Daily Intelligence · 25 October 2026',artist:language.value==='ml'?'Malayalam edition':language.value==='it'?'Italian edition':'English edition',album:depth.value==='full'?'Full newspaper':'News briefing'});
@@ -177,7 +177,7 @@ if(supported){window.speechSynthesis.onvoiceschanged=updateVoiceHint}updateVoice
        navigator.mediaSession.setActionHandler('seekforward',()=>{audio.currentTime=Math.min(audio.duration||Infinity,audio.currentTime+15)});
      }
      if(wasPlaying){try{await audio.play()}catch{status.textContent=message('Language changed. Press Play to continue.','ഭാഷ മാറി. കേൾക്കാൻ വീണ്ടും പ്ലേ അമർത്തൂ.')}}
-   }catch(e){if(request===trackRequest)status.textContent=message('Audio is unavailable right now.','ഇപ്പോൾ ഓഡിയോ ലഭ്യമല്ല.');}
+   }catch(e){audio.hidden=true;italian.hidden=false;document.getElementById('di-audio-caption').textContent='Device text-to-speech · MP3 unavailable';if(request===trackRequest)status.textContent=message('Audio is unavailable right now.','ഇപ്പോൾ ഓഡിയോ ലഭ്യമല്ല.');}
  }
  function syncAudioLanguage(){
    const selected=currentLanguage();

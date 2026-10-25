@@ -1,0 +1,40 @@
+name: Generate 25 October MP3 recordings
+on:
+  push:
+    branches: [feature/recorded-mp3-2026-10-25]
+    paths:
+      - 'scripts/build-audio-scripts.mjs'
+      - 'scripts/generate-audio.py'
+      - '.github/workflows/generate-mp3.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  generate:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build narration scripts
+        run: node scripts/build-audio-scripts.mjs
+      - name: Install speech synthesis
+        run: python -m pip install 'gTTS==2.5.4'
+      - name: Generate MP3 files
+        run: python scripts/generate-audio.py
+      - name: Verify audio files
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg
+          for f in audio/2026-10-25/*.mp3; do ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1 "$f"; done
+          test "$(find audio/2026-10-25 -name '*.mp3' | wc -l)" -eq 6
+      - name: Commit generated recordings to feature branch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add audio/2026-10-25
+          git diff --cached --quiet || (git commit -m 'Add generated 25 October multilingual MP3 recordings' && git push)
