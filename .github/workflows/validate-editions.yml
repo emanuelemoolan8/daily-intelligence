@@ -19,3 +19,5 @@ jobs:
           npx playwright install --with-deps chromium
       - name: Test mobile UI in Chromium
         run: node test/browser-smoke.mjs
+      - name: Check public Pages and speech synthesis calls
+        run: node test/live-pages-tts.mjs
