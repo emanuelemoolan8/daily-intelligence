@@ -23,7 +23,7 @@ for(const date of ['2026-10-24','2026-10-25']){
 console.log('Canonical UI and edition data checks passed');
 
 assert(!html.includes("audio/2026-10-24-"),'Must not play previous edition MP3 on October 25');
-assert(html.includes('Recorded audio is not available for this edition'),'Missing truthful audio fallback');
+assert(html.includes('Device text-to-speech is available'),'Missing speech playback fallback');
 assert(!html.includes('Brent closed at $116.72, Ukraine and Russia agreed'),'Stale lead paragraph detected');
 
 const legacy25=readFileSync('daily_intelligence_2026-10-25_bilingual_listen.html','utf8');
