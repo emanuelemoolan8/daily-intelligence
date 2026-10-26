@@ -20,6 +20,17 @@ try{
  assert.equal(await page.locator('#podcastPlayer').isVisible(),true,'Listening controls are visible');
  await page.evaluate(()=>{const el=document.querySelector('#lang');el.value='it';el.dispatchEvent(new Event('change',{bubbles:true}))});
  assert.equal(await page.locator('.headline h3[data-lang="en"]').first().innerText(),await page.evaluate(()=>window.DI_EDITION_DATA.italianHeadlines[0][0]));
+ if(await page.evaluate(()=>window.DI_EDITION_DATA.localization==='complete')){
+  await page.locator('#full').click();
+  assert.equal(await page.locator('.article-body [data-lang="en"] p').first().innerText(),await page.evaluate(()=>window.DI_EDITION_DATA.stories[0].deep_it[0]),'Full Italian article is rendered, not English fallback');
+  for(const id of ['intelligence','dashboard','forward','audit']){
+   const titles=await page.locator('#'+id+' .card h3[data-lang="en"]').allTextContents();
+   assert.deepEqual(titles,await page.evaluate(id=>window.DI_EDITION_DATA.sections.find(s=>s.id===id).cards.map(c=>c.it_title),id),'All desk cards are Italian: '+id);
+  }
+  assert.equal(await page.locator('.forecast p[data-lang="en"]').first().innerText(),await page.evaluate(()=>window.DI_EDITION_DATA.forecasts[0].it));
+  await page.locator('#short').click();
+ }
+
  await page.evaluate(()=>{const el=document.querySelector('#lang');el.value='ml';el.dispatchEvent(new Event('change',{bubbles:true}))});
  assert.match(await page.locator('body').innerText(),/മലയാളം|സൗദി/);
  await page.evaluate(()=>{const el=document.querySelector('#lang');el.value='en';el.dispatchEvent(new Event('change',{bubbles:true}))});
@@ -32,7 +43,7 @@ try{
  const cached=JSON.parse(readFileSync('editions/2026-10-25.js','utf8').replace(/^window\.DI_EDITION_DATA=/,'').trim().replace(/;$/,''));
  delete cached.date;delete cached.italianHeadlines;
  const legacyPage=await browser.newPage({viewport:{width:390,height:844},isMobile:true});
- await legacyPage.route('**/editions/latest.js',route=>route.fulfill({contentType:'text/javascript',body:'document.write(\'<script src="./editions/2026-10-25.js"><\\/script>\');'}));
+ await legacyPage.route('**/editions/latest.js*',route=>route.fulfill({contentType:'text/javascript',body:'document.write(\'<script src="./editions/2026-10-25.js"><\\/script>\');'}));
  await legacyPage.route('**/editions/2026-10-25.js',route=>route.fulfill({contentType:'text/javascript',body:'window.DI_EDITION_DATA='+JSON.stringify(cached)}));
  await legacyPage.goto('http://127.0.0.1:'+server.address().port+'/',{waitUntil:'domcontentloaded'});
  await legacyPage.waitForFunction(()=>document.getElementById('podcastAudio').getAttribute('src')?.includes('audio/2026-10-25/'));

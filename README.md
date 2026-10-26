@@ -15,6 +15,7 @@ Read [PUBLISHING.md](PUBLISHING.md) before publishing. Never overwrite or redire
 ```
 node --test test/edition-contract.test.mjs test/publishing.test.mjs
 node scripts/build-audio-scripts.mjs
+node scripts/measure-edition.mjs
 node test/browser-smoke.mjs
 node test/live-pages-tts.mjs
 ```

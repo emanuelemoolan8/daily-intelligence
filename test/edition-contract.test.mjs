@@ -7,7 +7,7 @@ assert(!/http-equiv=["']refresh["']/i.test(html),'Homepage must never redirect t
 assert(html.includes('di-floating-nav'),'Floating navigation missing');
 assert(html.includes('id="di-settings"'),'Settings view missing');
 assert(html.includes('id="podcastPlayer"'),'Audio player missing');
-assert(html.includes('src="./editions/latest.js"'),'Expected latest edition loader missing');
+assert(html.includes('src="./editions/latest.js?v=20261026"'),'Expected latest edition loader missing');
 for(const date of ['2026-10-24','2026-10-25']){
  const source=readFileSync('editions/'+date+'.js','utf8');
  const ctx={window:{}};
@@ -40,7 +40,7 @@ assert(html.includes('./audio/${window.DI_EDITION_DATA.date}/${language.value}-$
 assert(html.includes('audio.hidden=false;italian.hidden=true'),'Only show recorded MP3 player when file exists');
 
 const latest=readFileSync('editions/latest.js','utf8');
-assert(html.includes('<script src="./editions/latest.js"></script>'),'Canonical UI must load latest edition pointer');
+assert(html.includes('<script src="./editions/latest.js?v=20261026"></script>'),'Canonical UI must load latest edition pointer');
 const pointerDate=latest.match(/editions\/(\d{4}-\d{2}-\d{2})\.js/)?.[1];
 assert(pointerDate,'Latest pointer must select a dated edition');
 assert(readFileSync('editions/'+pointerDate+'.js','utf8').includes('DI_EDITION_DATA'));

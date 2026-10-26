@@ -37,3 +37,20 @@ test('inline scripts parse without browser execution',()=>{
  const html=fs.readFileSync('index.html','utf8');
  for(const match of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))new Function(match[1]);
 });
+
+test('complete localization covers every story, desk and forecast in narration',()=>{
+ if(data.localization!=='complete')return;
+ for(const s of data.stories){
+  assert(s.it_title&&s.it_summary&&s.context_it&&s.watch_it);
+  assert.equal(s.deep_it.length,s.deep_en.length,'Italian paragraph coverage must match English');
+ }
+ for(const s of data.sections){assert(s.it_title&&s.it_intro);for(const c of s.cards)assert(c.it_title&&c.it_summary&&c.it_deep)}
+ for(const f of data.forecasts)for(const key of ['it','evidence_it','counter_it','trigger_it'])assert(f[key]);
+ execFileSync(process.execPath,['scripts/build-audio-scripts.mjs']);
+ for(const language of ['en','ml','it']){
+  const full=fs.readFileSync(`audio/scripts/${date}/${language}-full.txt`,'utf8');
+  for(const s of data.sections)assert(full.includes(s[language+'_title']),'Narration contains desk in '+language);
+  for(const s of data.stories)for(const paragraph of s['deep_'+language])assert(full.includes(paragraph),'Narration contains full story in '+language);
+  if(language==='it')assert(!full.includes('English fallback')&&!full.includes('consulta il testo inglese'));
+ }
+});
