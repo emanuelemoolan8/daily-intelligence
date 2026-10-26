@@ -86,6 +86,8 @@ function diCollectItalian(item){
  }
 }
 diCollectItalian(D);
+diItalianText.set('Front page — twelve verified headlines','Prima pagina — dodici notizie con fonti');
+diItalianText.set('Twelve ranked verified stories. Use Next to move story by story.','Dodici notizie ordinate per rilevanza. Usa Avanti per passare alla successiva.');
 for(const f of D.forecasts){
  if(f.it)diItalianText.set(f.en,f.it);
  for(const [key,label,itLabel] of [['evidence','Evidence: ','Elementi: '],['counter','Counterargument: ','Obiezione: '],['trigger','Update trigger: ','Segnale di revisione: ']])if(f[key+'_it'])diItalianText.set(label+f[key],itLabel+f[key+'_it']);
@@ -168,7 +170,7 @@ function buildGroups(){
       if(mode==='full')parts.push(L(c.en_deep,c.ml_deep));
       g(L(c.en_title,c.ml_title),parts);
    }
-   if(section.id==='intelligence')for(const f of D.forecasts){const p=[`${f.id}. ${Math.round(f.p*100)} ${lang==='ml'?'ശതമാനം':'percent'}. `+(lang==='it'?f.it:L(f.en,f.ml))];
+   if(section.id==='intelligence')for(const f of D.forecasts){const p=[`${f.id}. ${Math.round(f.p*100)} ${lang==='ml'?'ശതമാനം':lang==='it'?'per cento':'percent'}. `+(lang==='it'?f.it:L(f.en,f.ml))];
       if(mode==='full')p.push(f.deadline,(lang==='it'?f.evidence_it:L(f.evidence,f.evidence_ml)),(lang==='it'?f.counter_it:L(f.counter,f.counter_ml)),(lang==='it'?f.trigger_it:L(f.trigger,f.trigger_ml)));
       g(f.id,p);
    }
