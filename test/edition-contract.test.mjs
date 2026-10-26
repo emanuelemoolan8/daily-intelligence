@@ -44,3 +44,6 @@ assert(html.includes('<script src="./editions/latest.js?v=20261026"></script>'),
 const pointerDate=latest.match(/editions\/(\d{4}-\d{2}-\d{2})\.js/)?.[1];
 assert(pointerDate,'Latest pointer must select a dated edition');
 assert(readFileSync('editions/'+pointerDate+'.js','utf8').includes('DI_EDITION_DATA'));
+
+assert(!html.includes('>Sunday, 25 October 2026</div>'),'Shell must not flash an old edition date while loading');
+assert(!html.includes('Natural narration · Screen-off listening'),'Do not promise unverified screen-off behaviour');
