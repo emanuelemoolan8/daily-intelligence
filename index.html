@@ -251,7 +251,7 @@ function getSelectedTopics(){return [...topicBox.querySelectorAll('input:checked
 function updatePrefSummaries(){
  const ml=$('lang').value==='ml';
  $('di-location-summary').textContent=$('di-city').value.trim()||(ml?'നഗരം തിരഞ്ഞെടുക്കൂ':'Choose your city');
- $('di-language-summary').textContent=ml?'മലയാളം':'English';
+ $('di-language-summary').textContent=$('lang').value==='it'?'Italiano':ml?'മലയാളം':'English';
  const topics=getSelectedTopics();$('di-topics-summary').textContent=topics.length?(ml?topics.length+' വിഷയങ്ങൾ തിരഞ്ഞെടുത്തു':topics.length+' topics selected'):(ml?'വാർത്തകൾ തിരഞ്ഞെടുക്കൂ':'Choose your topics');
  $('di-listening-summary').textContent=$('di-settings-depth').value==='full'?(ml?'വിശദമായി':'Full explanation'):(ml?'ചുരുക്കത്തിൽ':'Brief narration');
  $('di-notification-summary').textContent=(ml?'സമയം ':'Time ')+$('di-time').value+(ml?' · പരീക്ഷണം':' · Experimental');
@@ -366,7 +366,7 @@ if(D.localization==='complete'){
 text('#podcastPlayer h2',lang==='ml'?'ഇന്നത്തെ പത്രം കേൾക്കൂ':'Listen to today’s newspaper');text('#di-install',lang==='ml'?'⬇ ഇൻസ്റ്റാൾ':'⬇ Install');text('#di-listen-heading',lang==='it'?'Ascolta le notizie di oggi':lang==='ml'?'ഇന്നത്തെ വാർത്തകൾ കേൾക്കൂ':"Listen to today's news");if(window.diWeatherRender)window.diWeatherRender();const recordedAudio=!document.getElementById('podcastAudio').hidden; text('#di-audio-caption',lang==='it'?(recordedAudio?'MP3 registrato · La riproduzione in background dipende dal browser':'Voce del dispositivo · Riproduzione a schermo spento non garantita'):lang==='ml'?(recordedAudio?'റെക്കോർഡ് ചെയ്ത MP3 · പശ്ചാത്തല പ്രവർത്തനം ബ്രൗസറിനെ ആശ്രയിക്കും':'ഉപകരണ ശബ്ദം · സ്ക്രീൻ ഓഫ് പ്രവർത്തനം ഉറപ്പില്ല'):(recordedAudio?'Recorded MP3 · Background playback depends on your browser':'Device voice · Screen-off playback not guaranteed'));text('label[for="podcastLanguage"]',t.podcastLanguage);text('label[for="podcastDepth"]',t.podcastLength);text('label[for="speed"]',t.speed);
 const en=document.querySelector('.mast .eyebrow');if(en)en.textContent=lang==='ml'?'സ്വതന്ത്ര പ്രഭാത വാർത്താപത്രം':'Independent morning newspaper';
 }
-document.getElementById('lang').addEventListener('change',localize);try{const saved=localStorage.getItem('di-language');if(saved==='en'||saved==='ml'){document.getElementById('lang').value=saved;setLanguage(saved);if(window.diSyncAudioLanguage)window.diSyncAudioLanguage()}}catch{}localize();
+document.getElementById('lang').addEventListener('change',localize);try{const saved=localStorage.getItem('di-language');if(['en','ml','it'].includes(saved)){document.getElementById('lang').value=saved;setLanguage(saved);if(window.diSyncAudioLanguage)window.diSyncAudioLanguage()}const savedMode=localStorage.getItem('di-reading-depth');if(savedMode==='short'||savedMode==='full')setMode(savedMode)}catch{}localize();
 })();
 </script><script>
 (function(){

@@ -31,6 +31,13 @@ try{
   await page.locator('#short').click();
  }
 
+ await page.locator('#full').click();
+ await page.reload({waitUntil:'domcontentloaded'});
+ await page.waitForSelector('.headline');
+ assert.equal(await page.locator('#lang').inputValue(),'it','Saved Italian language survives reopening');
+ assert.equal(await page.locator('#full').getAttribute('aria-pressed'),'true','Saved reading mode survives reopening');
+ assert.equal(await page.locator('.headline h3[data-lang="en"]').first().innerText(),await page.evaluate(()=>window.DI_EDITION_DATA.italianHeadlines[0][0]));
+ await page.locator('#short').click();
  await page.evaluate(()=>{const el=document.querySelector('#lang');el.value='ml';el.dispatchEvent(new Event('change',{bubbles:true}))});
  assert.match(await page.locator('body').innerText(),/മലയാളം|സൗദി/);
  await page.evaluate(()=>{const el=document.querySelector('#lang');el.value='en';el.dispatchEvent(new Event('change',{bubbles:true}))});
