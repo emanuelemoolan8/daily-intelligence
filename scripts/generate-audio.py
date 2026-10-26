@@ -1,7 +1,10 @@
 from pathlib import Path
 from gtts import gTTS
 import sys
-edition = '2026-10-25'
+import re
+edition = sys.argv[1] if len(sys.argv) > 1 else re.search(r'editions/(\d{4}-\d{2}-\d{2})\.js', Path('editions/latest.js').read_text()).group(1)
+if not re.fullmatch(r'\d{4}-\d{2}-\d{2}', edition):
+    raise ValueError('Invalid edition date')
 source = Path('audio/scripts') / edition
 output = Path('audio') / edition
 output.mkdir(parents=True, exist_ok=True)

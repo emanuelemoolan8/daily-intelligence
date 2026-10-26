@@ -32,13 +32,15 @@ assert(!legacy25.includes('class="desk"'), 'Old 25 October URL must not duplicat
 assert(html.includes('italian.hidden=false;audio.hidden=true'), 'Speech controls must remain visible for every language');
 assert(html.includes('Screen-off playback not guaranteed'), 'Avoid promising unsupported background TTS');
 
-assert(html.includes('Le rotte petrolifere saudite affrontano nuovi rischi'),'Italian edition must match October 25 first story');
+assert(html.includes('D.italianHeadlines'),'Italian headlines must come from edition data');
 assert(!html.includes('italianArticleContent'),'Outdated Italian long-form article data must be removed');
 assert(html.includes('ANALISI (testo inglese)'),'Untranslated deep analysis must be labelled');
 
-assert(html.includes('./audio/2026-10-25/${language.value}-${depth.value}.mp3'),'MP3 track resolver must use edition and controls');
+assert(html.includes('./audio/${window.DI_EDITION_DATA.date}/${language.value}-${depth.value}.mp3'),'MP3 track resolver must use edition and controls');
 assert(html.includes('audio.hidden=false;italian.hidden=true'),'Only show recorded MP3 player when file exists');
 
 const latest=readFileSync('editions/latest.js','utf8');
 assert(html.includes('<script src="./editions/latest.js"></script>'),'Canonical UI must load latest edition pointer');
-assert(latest.includes('editions/2026-10-25.js'),'Latest pointer must select most recent published edition');
+const pointerDate=latest.match(/editions\/(\d{4}-\d{2}-\d{2})\.js/)?.[1];
+assert(pointerDate,'Latest pointer must select a dated edition');
+assert(readFileSync('editions/'+pointerDate+'.js','utf8').includes('DI_EDITION_DATA'));

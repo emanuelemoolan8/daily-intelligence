@@ -12,12 +12,14 @@ try{
    const synth={speaking:false,paused:false,onvoiceschanged:null,getVoices(){return [{name:'English',lang:'en-US',default:true},{name:'Italiano',lang:'it-IT'},{name:'Malayalam',lang:'ml-IN'}]},cancel(){this.speaking=false},speak(u){window.__ttsCalls.push({text:u.text,lang:u.lang});this.speaking=true},pause(){this.paused=true},resume(){this.paused=false}};
    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:synth});
  });
+ await page.route('**/audio/**/*.mp3',route=>route.fulfill({status:404,body:''}));
  const response=await page.goto(base+'?ci_live='+Date.now(),{waitUntil:'domcontentloaded',timeout:30000});
  assert.equal(response.status(),200,'Public GitHub Pages must return HTTP 200');
  await page.waitForSelector('.headline',{timeout:12000});
  assert.equal(await page.locator('.headline').count(),12,'Live edition has 12 headlines');
- assert.match(await page.locator('body').innerText(),/Saudi oil routes face a fresh security test/,'Live news is October 25');
- const dataResponse=await page.request.get(base+'editions/2026-10-25.js?ci='+Date.now());
+ assert.equal(await page.locator('.headline h3[data-lang="en"]').first().innerText(),await page.evaluate(()=>window.DI_EDITION_DATA.stories[0].en_title));
+ const edition=await page.evaluate(()=>window.DI_EDITION_DATA.date||'2026-10-25');
+ const dataResponse=await page.request.get(base+'editions/'+edition+'.js?ci='+Date.now());
  assert.equal(dataResponse.status(),200,'Published edition JS is accessible');
  assert.match(await dataResponse.text(),/DI_EDITION_DATA/);
  const player=page.locator('#di-italian-play');assert.equal(await player.isVisible(),true,'Speech play control visible');

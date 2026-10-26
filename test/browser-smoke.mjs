@@ -14,11 +14,12 @@ try{
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
  await page.goto('http://127.0.0.1:'+server.address().port+'/',{waitUntil:'domcontentloaded'});
  await page.waitForSelector('.headline',{timeout:12000});
- assert.equal(await page.locator('.headline').count(),12,'All twelve 25 October headlines render');
- assert.match(await page.locator('body').innerText(),/Saudi oil routes face a fresh security test/);
- assert.equal(await page.locator('#di-italian-play').isVisible(),true,'Listening controls are visible');
+ assert.equal(await page.locator('.headline').count(),12,'All twelve headlines render');
+ assert.equal(await page.locator('.headline h3[data-lang="en"]').first().innerText(),await page.evaluate(()=>window.DI_EDITION_DATA.stories[0].en_title));
+ await page.waitForFunction(()=>!document.getElementById('podcastAudio').hidden||!document.getElementById('di-italian-tts').hidden);
+ assert.equal(await page.locator('#podcastPlayer').isVisible(),true,'Listening controls are visible');
  await page.evaluate(()=>{const el=document.querySelector('#lang');el.value='it';el.dispatchEvent(new Event('change',{bubbles:true}))});
- assert.match(await page.locator('body').innerText(),/Le rotte petrolifere saudite affrontano nuovi rischi/);
+ assert.equal(await page.locator('.headline h3[data-lang="en"]').first().innerText(),await page.evaluate(()=>window.DI_EDITION_DATA.italianHeadlines[0][0]));
  await page.evaluate(()=>{const el=document.querySelector('#lang');el.value='ml';el.dispatchEvent(new Event('change',{bubbles:true}))});
  assert.match(await page.locator('body').innerText(),/മലയാളം|സൗദി/);
  await page.evaluate(()=>{const el=document.querySelector('#lang');el.value='en';el.dispatchEvent(new Event('change',{bubbles:true}))});

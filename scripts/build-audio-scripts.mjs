@@ -1,28 +1,31 @@
 import fs from 'node:fs';
-import vm from 'node:vm';
-const edition='2026-10-25';
-const src=fs.readFileSync('editions/'+edition+'.js','utf8');
-const sandbox={window:{}};vm.runInNewContext(src,sandbox,{timeout:5000});
-const stories=sandbox.window.DI_EDITION_DATA.stories;
-const html=fs.readFileSync('index.html','utf8');
-const match=html.match(/const italianHeadlines=(\[.*?\]);\s*function italianStoryText/s);
-if(!match)throw Error('Italian headline data not found');
-const it=JSON.parse(match[1]);
-if(stories.length!==12||it.length!==stories.length)throw Error('Story count mismatch');
-fs.mkdirSync('audio/scripts/'+edition,{recursive:true});
-for(const lang of ['en','ml','it'])for(const depth of ['short','full']){
+import {readEdition} from './edition.mjs';
+const {date,data}=readEdition(process.argv[2]);
+const target=`audio/scripts/${date}`;
+fs.mkdirSync(target,{recursive:true});
+for(const language of ['en','ml','it'])for(const depth of ['short','full']){
  const lines=[];
- for(let i=0;i<stories.length;i++){
-  const s=stories[i];
-  if(lang==='it'){
-   lines.push(it[i][0],it[i][1]);
-   // Full Italian articles have not been translated: don't mislabel English as Italian audio.
-   if(depth==='full')lines.push('Per ulteriori approfondimenti, consulta il testo inglese dell’articolo.');
+ const value=(item,key)=>item[`${key}_${language}`]??item[`${language}_${key}`];
+ const add=(...items)=>{for(const item of items.flat(Infinity))if(typeof item==='string'&&item.trim())lines.push(item)};
+ for(const [i,story] of data.stories.entries()){
+  if(language==='it'&&!story.it_title){
+   add(...data.italianHeadlines[i]);
+   if(depth==='full')add('Questa edizione offre solo riassunti in italiano. Gli approfondimenti e le altre sezioni non sono ancora tradotti.');
   }else{
-   lines.push(lang==='en'?s.en_title:s.ml_title,lang==='en'?s.en_summary:s.ml_summary);
-   if(depth==='full')lines.push(...(lang==='en'?s.deep_en:s.deep_ml),lang==='en'?s.context_en:s.context_ml,lang==='en'?s.watch_en:s.watch_ml);
+   add(value(story,'title'),value(story,'summary'));
+   if(depth==='full')add(value(story,'deep'),value(story,'context'),value(story,'watch'));
   }
  }
- fs.writeFileSync('audio/scripts/'+edition+'/'+lang+'-'+depth+'.txt',lines.filter(Boolean).join('\n\n')+'\n');
+ if(language!=='it'||data.sections.every(s=>s.it_title)){
+  for(const section of data.sections){
+   add(value(section,'title'),value(section,'intro'));
+   for(const card of section.cards){add(value(card,'title'),value(card,'summary'));if(depth==='full')add(value(card,'deep'))}
+   if(section.id==='intelligence')for(const f of data.forecasts){
+    add(`${Math.round(f.p*100)}%.`,f[language]);
+    if(depth==='full')add(f.deadline,value(f,'evidence'),value(f,'counter'),value(f,'trigger'));
+   }
+  }
+ }
+ fs.writeFileSync(`${target}/${language}-${depth}.txt`,lines.join('\n\n')+'\n');
 }
-console.log('Prepared 6 narration scripts for '+edition);
+console.log(`Prepared six narration scripts for ${date}; Italian coverage follows available translations.`);

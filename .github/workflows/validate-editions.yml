@@ -12,7 +12,7 @@ jobs:
         with:
           node-version: '22'
       - name: Validate edition contract
-        run: node --test test/edition-contract.test.mjs
+        run: node --test test/edition-contract.test.mjs test/publishing.test.mjs
       - name: Install Chromium browser test runner
         run: |
           npm install --no-save playwright@1.56.1
