@@ -28,5 +28,16 @@ try{
  await page.locator('#short').click();
  assert.equal(await page.locator('#short').getAttribute('aria-pressed'),'true');
  assert.deepEqual(errors,[],'No uncaught browser errors');
- console.log('Mobile browser smoke checks passed');
+ // A browser can retain an older payload while receiving the new shell.
+ const cached=JSON.parse(readFileSync('editions/2026-10-25.js','utf8').replace(/^window\.DI_EDITION_DATA=/,'').trim().replace(/;$/,''));
+ delete cached.date;delete cached.italianHeadlines;
+ const legacyPage=await browser.newPage({viewport:{width:390,height:844},isMobile:true});
+ await legacyPage.route('**/editions/latest.js',route=>route.fulfill({contentType:'text/javascript',body:'document.write(\'<script src="./editions/2026-10-25.js"><\\/script>\');'}));
+ await legacyPage.route('**/editions/2026-10-25.js',route=>route.fulfill({contentType:'text/javascript',body:'window.DI_EDITION_DATA='+JSON.stringify(cached)}));
+ await legacyPage.goto('http://127.0.0.1:'+server.address().port+'/',{waitUntil:'domcontentloaded'});
+ await legacyPage.waitForFunction(()=>document.getElementById('podcastAudio').getAttribute('src')?.includes('audio/2026-10-25/'));
+ await legacyPage.evaluate(()=>{const el=document.querySelector('#lang');el.value='it';el.dispatchEvent(new Event('change',{bubbles:true}))});
+ assert.ok((await legacyPage.locator('.headline h3[data-lang="en"]').first().innerText()).trim(),'Cached older payload must not erase headlines');
+ await legacyPage.close();
+ console.log('Mobile browser and cached-payload smoke checks passed');
 }finally{if(browser)await browser.close();await new Promise(resolve=>server.close(resolve))}
