@@ -1,12 +1,12 @@
 {
-  "date": "2026-10-26",
+  "date": "2026-10-29",
   "ready": true,
   "audio": [
-    "audio/2026-10-26/en-short.mp3",
-    "audio/2026-10-26/en-full.mp3",
-    "audio/2026-10-26/ml-short.mp3",
-    "audio/2026-10-26/ml-full.mp3",
-    "audio/2026-10-26/it-short.mp3",
-    "audio/2026-10-26/it-full.mp3"
+    "audio/2026-10-29/en-short.mp3",
+    "audio/2026-10-29/en-full.mp3",
+    "audio/2026-10-29/ml-short.mp3",
+    "audio/2026-10-29/ml-full.mp3",
+    "audio/2026-10-29/it-short.mp3",
+    "audio/2026-10-29/it-full.mp3"
   ]
 }
