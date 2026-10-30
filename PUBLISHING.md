@@ -28,6 +28,14 @@ One warm, intelligent presenter speaks directly to the listener in every languag
 
 The publication manifest is an audio-readiness signal for the optional notification backend. It is not proof that notifications were delivered, translations are complete or audio played on a physical device.
 
+## Failure recovery and schedule continuity
+
+Written-edition publication and optional recorded audio have separate outcomes. Keep the daily briefing schedule enabled when a speech provider, browser check or deployment fails; report the failed stage without modifying the automation's enabled state or schedule. The scheduled briefing must not call automation-management tools to pause itself.
+
+After committing a verified edition, spend at most two minutes checking asynchronous audio/deployment status. If still running, report the exact pending stage and workflow link, then finish the briefing. Do not wait for the entire recording job, start duplicate generation jobs, or claim that pending audio succeeded. Failed required editorial checks still block publication of the candidate edition.
+
+The recording generator paces speech requests, retries transient failures at most four times with backoff, and stops after a 40-minute generation budget. Completed text chunks are keyed by their language and content and saved in a best-effort Actions cache even when a later chunk fails. A rerun can resume this progress; changed narration cannot reuse a chunk from different text. Partial output never replaces a recording. The readiness manifest and public recordings are still committed only after all six recordings pass verification. Provider availability and cache retention are not guaranteed.
+
 ## Current limitations
 
 The 25 October archive has shorter Malayalam reporting, Italian lead summaries, and historical market/weather content. The 26 October catch-up supplies detailed content for all six desks in all three languages. It explicitly omits unverified historical price series and a Sesto alert table rather than carrying old data forward. Its measured length is shorter than the former English long-read target. Recordings follow the actual supplied text in each language. Physical phone sound output, screen-off playback and deployed Cloudflare notifications still need separate verification. These are not release claims.

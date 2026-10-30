@@ -18,7 +18,7 @@ concurrency:
 jobs:
   generate:
     runs-on: ubuntu-24.04
-    timeout-minutes: 45
+    timeout-minutes: 55
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -36,6 +36,17 @@ jobs:
           python -m pip install 'gTTS==2.5.4'
           sudo apt-get update -qq
           sudo apt-get install -y ffmpeg
+      - name: Test audio recovery
+        run: python -m unittest discover -s test -p 'test_audio_recovery.py'
+      - name: Restore completed speech chunks
+        id: speech-cache
+        continue-on-error: true
+        uses: actions/cache/restore@v4
+        with:
+          path: audio/.tts-cache
+          key: speech-v1-${{ runner.os }}-${{ hashFiles('audio/scripts/**/*.txt') }}-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: |
+            speech-v1-${{ runner.os }}-${{ hashFiles('audio/scripts/**/*.txt') }}-
       - name: Generate and verify recordings
         run: |
           python scripts/generate-audio.py
@@ -45,6 +56,13 @@ jobs:
             awk -v duration="$duration" 'BEGIN { exit !(duration > 1) }'
           done
           node scripts/prepare-publication.mjs
+      - name: Save speech progress even after a service failure
+        if: ${{ always() && steps.speech-cache.outcome == 'success' }}
+        continue-on-error: true
+        uses: actions/cache/save@v4
+        with:
+          path: audio/.tts-cache
+          key: ${{ steps.speech-cache.outputs.cache-primary-key }}
       - name: Publish recordings only if edition has not changed
         run: |
           expected=$(git rev-parse HEAD)
