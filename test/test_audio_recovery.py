@@ -61,6 +61,13 @@ class AudioRecovery(unittest.TestCase):
         self.assertEqual(self.dest.read_bytes(), b'old verified recording')
         self.assertFalse(list(self.root.rglob('*.part')))
 
+    def test_pacing_is_independent_of_stream_fragment_count(self):
+        def factory(**kwargs):
+            return SimpleNamespace(stream=lambda: iter([b'a' * 100] * 60))
+        self.run_audio(factory)
+        self.assertEqual(self.sleeps, [0.5])
+        self.assertEqual(self.dest.stat().st_size, 6000)
+
     def test_permanent_error_is_not_retried(self):
         def factory(**kwargs):
             raise error(403)

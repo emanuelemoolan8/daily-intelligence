@@ -64,7 +64,7 @@ def generate_recording(text, lang, dest, cache, *, factory=None, sleep=time.slee
                             for audio in speech.stream():
                                 check_deadline()
                                 output.write(audio)
-                                sleep(0.5)
+                        sleep(0.5)
                         if temporary.stat().st_size < 100:
                             raise ValueError('Speech service returned an empty or tiny chunk')
                         temporary.replace(part)
