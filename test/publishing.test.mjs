@@ -54,3 +54,41 @@ test('complete localization covers every story, desk and forecast in narration',
   if(language==='it')assert(!full.includes('English fallback')&&!full.includes('consulta il testo inglese'));
  }
 });
+
+test('edition reader rejects executable payloads without evaluating them', () => {
+  const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'di-payload-'));
+  try {
+    fs.mkdirSync(path.join(temp, 'editions'));
+    const {resolve} = path;
+    const module = resolve('scripts/edition.mjs');
+    fs.writeFileSync(path.join(temp, 'editions/2026-11-18.js'),
+      'window.DI_EDITION_DATA={"date":"2026-11-18"}; throw Error("must never execute");');
+    assert.throws(() => execFileSync(process.execPath, [
+      '--input-type=module', '-e', `import {readEdition} from ${JSON.stringify(module)}; readEdition("2026-11-18");`
+    ], {cwd: temp, stdio: 'pipe', encoding: 'utf8'}), {stderr: /SyntaxError/});
+  } finally {
+    fs.rmSync(temp, {recursive: true, force: true});
+  }
+});
+
+test('malformed recordings never replace the previous readiness manifest', () => {
+  const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'di-readiness-'));
+  try {
+    fs.cpSync('scripts', path.join(temp, 'scripts'), {recursive: true});
+    fs.mkdirSync(path.join(temp, 'editions'));
+    fs.copyFileSync(`editions/${date}.js`, path.join(temp, `editions/${date}.js`));
+    fs.mkdirSync(path.join(temp, 'audio', date), {recursive: true});
+    for (const lang of ['en', 'ml', 'it']) {
+      for (const mode of ['short', 'full']) {
+        fs.writeFileSync(path.join(temp, 'audio', date, `${lang}-${mode}.mp3`), Buffer.alloc(6000));
+      }
+    }
+    const manifest = path.join(temp, 'publication.json');
+    fs.writeFileSync(manifest, 'previous release');
+    assert.throws(() => execFileSync(process.execPath, ['scripts/prepare-publication.mjs', date],
+      {cwd: temp, stdio: 'pipe'}));
+    assert.equal(fs.readFileSync(manifest, 'utf8'), 'previous release');
+  } finally {
+    fs.rmSync(temp, {recursive: true, force: true});
+  }
+});
