@@ -50,7 +50,7 @@ try{
  const edition=await page.evaluate(()=>window.DI_EDITION_DATA.date);
  if(process.env.DI_REQUIRE_RECORDINGS==='1'){
   for(const language of ['en','ml','it']){
-   await page.locator('#lang').selectOption(language);
+   await page.locator('#lang').selectOption(language,{force:true});
    for(const mode of ['short','full']){
     await page.locator('#'+mode).click();
     await page.waitForFunction(({edition,language,mode})=>{
