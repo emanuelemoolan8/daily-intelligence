@@ -18,15 +18,12 @@ One warm, intelligent presenter speaks directly to the listener in every languag
 
 ## Validation and publication
 
-1. Read current main and preserve the application shell and historical editions.
-2. Research and write fresh content. Populate all six desks and measure actual lengths.
-3. Run `node scripts/measure-edition.mjs YYYY-MM-DD --write` to record measured editorial lengths, then `node --test test/edition-contract.test.mjs test/publishing.test.mjs` and `node scripts/build-audio-scripts.mjs` against the candidate edition/pointer.
-4. Commit edition and pointer atomically to main (Git tree/commit + ref update, or a regular Git commit/push). A pointer must never reference an absent file.
-5. The **Generate current edition recordings** workflow builds six recordings from the pointer. English/Malayalam narration includes all desks; Italian narration follows available translations and discloses missing depth. It verifies decoding duration and updates publication.json only after all six recordings exist. A stale workflow refuses to overwrite a newer branch head; rerun on current main rather than force-pushing.
-6. Check workflow conclusions and the actual public homepage. Confirm the correct date, all six desks, language/mode changes and audio asset availability. Run browser checks in CI. Browser speech invocation tests mock the speech API and do not prove audible output on a phone.
-7. Deliver the permanent website link and exact verified result. If publishing, audio or deployment failed, state the failed stage and leave the prior verified edition available. Never label a previous edition as today's edition.
-
-The publication manifest is an audio-readiness signal for the optional notification backend. It is not proof that notifications were delivered, translations are complete or audio played on a physical device.
+1. Start from current main and write `editions/YYYY-MM-DD.js` for the Europe/Rome date. An unfinished candidate can live on `edition/YYYY-MM-DD` with the live pointer untouched. Resume that branch and date on retry. Never recycle an earlier date's reporting as today's edition.
+2. In an isolated checkout, run `node scripts/prepare-edition.mjs YYYY-MM-DD`. It measures all three languages, checks the candidate directly, builds its six narration scripts and then prepares the pointer in that checkout. Run `node --test test/edition-contract.test.mjs test/publishing.test.mjs` and `node test/browser-smoke.mjs` before making a release commit. The latter uses Playwright and Chromium as installed in `.github/workflows/validate-editions.yml`.
+3. When the editor lacks a Node/Chromium workspace, push only the dated draft on `edition/YYYY-MM-DD`. The validation workflow prepares it in an isolated runner and uploads the measured edition and matching pointer as `validated-edition` only after both checks pass. On recovery, find the run for the exact draft commit. A failed run leaves the branch available for repair. An already validated draft can be promoted without regenerating the reporting.
+4. Promote only that validated pair onto main in one commit, using an authenticated, non-force-push or the GitHub Git tree API and a non-forced ref update. Build the commit on current main and check that its pointer is older than the candidate. If main moves, retry against the new head and recheck the pointer. If the date is already live, verify it and stop. Never merge the draft branch as a substitute for promoting its validated files.
+5. After Pages deploys, run `DI_EXPECTED_DATE=YYYY-MM-DD node test/live-pages-tts.mjs` and confirm GitHub Pages deployed the release commit. This checks the exact date and browser speech invocation. The browser test mocks synthesis, so it does not prove audible playback on physical devices.
+6. The existing recordings workflow runs after written publication. Track its result separately. It publishes the readiness manifest only after all six recordings are generated, and checks main before pushing. Verify the six actual URLs once the recording commit deploys. The browser retains device speech when recordings are unavailable. The manifest is an audio-readiness signal for the optional notification backend.
 
 ## Failure recovery and schedule continuity
 

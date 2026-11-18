@@ -9,7 +9,7 @@ const server=createServer((req,res)=>{const url=new URL(req.url,'http://localhos
 await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
 let browser;
 try{
- browser=await chromium.launch({headless:true,args:['--no-sandbox']});
+ browser=await chromium.launch({executablePath: process.env.DI_CHROMIUM_PATH, headless:true,args:['--no-sandbox']});
  const page=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
  await page.goto('http://127.0.0.1:'+server.address().port+'/',{waitUntil:'domcontentloaded'});
@@ -39,7 +39,10 @@ try{
  assert.equal(await page.locator('.headline h3[data-lang="en"]').first().innerText(),await page.evaluate(()=>window.DI_EDITION_DATA.italianHeadlines[0][0]));
  await page.locator('#short').click();
  await page.evaluate(()=>{const el=document.querySelector('#lang');el.value='ml';el.dispatchEvent(new Event('change',{bubbles:true}))});
- assert.match(await page.locator('body').innerText(),/മലയാളം|സൗദി/);
+ assert.equal(await page.locator('.headline h3[data-lang="ml"]').first().innerText(),await page.evaluate(()=>window.DI_EDITION_DATA.stories[0].ml_title));
+ await page.locator('#full').click();
+ assert.equal(await page.locator('.article-body [data-lang="ml"] p').first().innerText(),await page.evaluate(()=>window.DI_EDITION_DATA.stories[0].deep_ml[0]));
+ await page.locator('#short').click();
  await page.evaluate(()=>{const el=document.querySelector('#lang');el.value='en';el.dispatchEvent(new Event('change',{bubbles:true}))});
  await page.locator('#full').click();
  assert.equal(await page.locator('#full').getAttribute('aria-pressed'),'true');

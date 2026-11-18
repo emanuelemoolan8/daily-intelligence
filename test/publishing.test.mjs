@@ -5,6 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import {execFileSync} from 'node:child_process';
 import {readEdition} from '../scripts/edition.mjs';
+import {validateEdition} from '../scripts/validate-edition.mjs';
 const {date,data}=readEdition();
 test('latest edition has metadata and all six desks',()=>{
  assert.equal(data.date,date);
@@ -39,18 +40,41 @@ test('inline scripts parse without browser execution',()=>{
 });
 
 test('complete localization covers every story, desk and forecast in narration',()=>{
- if(data.localization!=='complete')return;
- for(const s of data.stories){
-  assert(s.it_title&&s.it_summary&&s.context_it&&s.watch_it);
-  assert.equal(s.deep_it.length,s.deep_en.length,'Italian paragraph coverage must match English');
- }
- for(const s of data.sections){assert(s.it_title&&s.it_intro);for(const c of s.cards)assert(c.it_title&&c.it_summary&&c.it_deep)}
- for(const f of data.forecasts)for(const key of ['it','evidence_it','counter_it','trigger_it'])assert(f[key]);
+ validateEdition(data);
  execFileSync(process.execPath,['scripts/build-audio-scripts.mjs']);
  for(const language of ['en','ml','it']){
   const full=fs.readFileSync(`audio/scripts/${date}/${language}-full.txt`,'utf8');
   for(const s of data.sections)assert(full.includes(s[language+'_title']),'Narration contains desk in '+language);
   for(const s of data.stories)for(const paragraph of s['deep_'+language])assert(full.includes(paragraph),'Narration contains full story in '+language);
   if(language==='it')assert(!full.includes('English fallback')&&!full.includes('consulta il testo inglese'));
+ }
+});
+
+test('a failed candidate keeps the prior pointer and can be retried', () => {
+ const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'di-prepare-'));
+ try {
+  fs.cpSync('scripts', path.join(temp, 'scripts'), {recursive: true});
+  fs.cpSync('editions', path.join(temp, 'editions'), {recursive: true});
+  const latest = path.join(temp, 'editions/latest.js');
+  const before = fs.readFileSync(latest, 'utf8');
+  const candidate = structuredClone(data);
+  candidate.date = '2099-01-01';
+  const candidateFile = path.join(temp, 'editions', candidate.date + '.js');
+  const write = () => fs.writeFileSync(candidateFile, 'window.DI_EDITION_DATA=' + JSON.stringify(candidate));
+  const prepare = () => execFileSync(process.execPath, ['scripts/prepare-edition.mjs', candidate.date], {cwd: temp, stdio: 'pipe'});
+
+  const watch = candidate.stories[0].watch_ml;
+  delete candidate.stories[0].watch_ml;
+  write();
+  assert.throws(prepare, /Missing ml story watch/);
+  assert.equal(fs.readFileSync(latest, 'utf8'), before);
+
+  candidate.stories[0].watch_ml = watch;
+  write();
+  prepare();
+  assert.match(fs.readFileSync(latest, 'utf8'), /2099-01-01/);
+  assert(fs.existsSync(path.join(temp, 'audio/scripts/2099-01-01/it-full.txt')));
+ } finally {
+  fs.rmSync(temp, {recursive: true, force: true});
  }
 });

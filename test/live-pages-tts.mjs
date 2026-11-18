@@ -1,7 +1,7 @@
 import {chromium} from 'playwright';
 import assert from 'node:assert/strict';
 const base='https://emanuelemoolan8.github.io/daily-intelligence/';
-const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
+const browser=await chromium.launch({executablePath: process.env.DI_CHROMIUM_PATH, headless:true,args:['--no-sandbox']});
 try{
  const page=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
@@ -19,6 +19,7 @@ try{
  assert.equal(await page.locator('.headline').count(),12,'Live edition has 12 headlines');
  assert.equal(await page.locator('.headline h3[data-lang="en"]').first().innerText(),await page.evaluate(()=>window.DI_EDITION_DATA.stories[0].en_title));
  const edition=await page.evaluate(()=>window.DI_EDITION_DATA.date||'2026-10-25');
+ if (process.env.DI_EXPECTED_DATE) assert.equal(edition, process.env.DI_EXPECTED_DATE, 'Pages must serve the expected edition');
  const dataResponse=await page.request.get(base+'editions/'+edition+'.js?ci='+Date.now());
  assert.equal(dataResponse.status(),200,'Published edition JS is accessible');
  assert.match(await dataResponse.text(),/DI_EDITION_DATA/);
@@ -32,5 +33,5 @@ try{
    await page.locator('#di-italian-stop').click();
  }
  assert.deepEqual(errors,[],'No uncaught live-page JavaScript errors');
- console.log(JSON.stringify({liveStatus:response.status(),headlineCount:12,editionAssetStatus:dataResponse.status(),speechCalls:await page.evaluate(()=>window.__ttsCalls.map(x=>({lang:x.lang,length:x.text.length}))),note:'Speech synthesis API is mocked; this validates invocation, not physical sound output.'}));
+ console.log(JSON.stringify({liveStatus:response.status(),edition,headlineCount:12,editionAssetStatus:dataResponse.status(),speechCalls:await page.evaluate(()=>window.__ttsCalls.map(x=>({lang:x.lang,length:x.text.length}))),note:'Speech synthesis API is mocked; this validates invocation, not physical sound output.'}));
 }finally{await browser.close()}
