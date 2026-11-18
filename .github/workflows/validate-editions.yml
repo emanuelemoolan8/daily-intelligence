@@ -2,7 +2,7 @@ name: Validate Daily Intelligence UI
 on:
   pull_request:
   push:
-    branches: [main, 'edition/**']
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -16,13 +16,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Prepare dated draft in isolation
-        id: candidate
-        if: startsWith(github.ref, 'refs/heads/edition/')
-        run: |
-          date="${GITHUB_REF_NAME#edition/}"
-          node scripts/prepare-edition.mjs "$date"
-          printf 'date=%s\n' "$date" >> "$GITHUB_OUTPUT"
       - name: Validate edition contract
         run: node --test test/edition-contract.test.mjs test/publishing.test.mjs
       - name: Install Chromium browser test runner
@@ -31,12 +24,3 @@ jobs:
           npx playwright install --with-deps chromium
       - name: Test mobile UI in Chromium
         run: node test/browser-smoke.mjs
-      - name: Save validated release files
-        if: startsWith(github.ref, 'refs/heads/edition/')
-        uses: actions/upload-artifact@v4
-        with:
-          name: validated-edition
-          path: |
-            editions/latest.js
-            editions/${{ steps.candidate.outputs.date }}.js
-          if-no-files-found: error

@@ -1,79 +1,54 @@
-name: Generate current edition recordings
+name: Prepare candidate edition recordings
+
 on:
   push:
-    branches: [main]
-    paths:
-      - 'scripts/build-audio-scripts.mjs'
-      - 'scripts/generate-audio.py'
-      - 'scripts/edition.mjs'
-      - 'scripts/prepare-publication.mjs'
-      - '.github/workflows/generate-mp3.yml'
-      - 'editions/**'
+    branches: ['edition/*']
   workflow_dispatch:
+
 permissions:
   contents: write
+
 concurrency:
-  group: current-edition-audio
+  group: candidate-audio-${{ github.ref }}
   cancel-in-progress: true
+
 jobs:
   generate:
+    if: startsWith(github.ref, 'refs/heads/edition/')
     runs-on: ubuntu-24.04
-    timeout-minutes: 55
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - name: Validate edition and prepare narration
+      - name: Validate candidate
         run: |
+          edition="${GITHUB_REF_NAME#edition/}"
+          node scripts/prepare-edition.mjs "$edition"
           node --test test/edition-contract.test.mjs test/publishing.test.mjs
-          node scripts/build-audio-scripts.mjs
-      - name: Install speech and verification tools
+      - name: Install offline speech and audio tools
         run: |
-          python -m pip install --retries 3 --timeout 30 'gTTS==2.5.4'
-          if ! command -v ffmpeg || ! command -v ffprobe; then
-            timeout 90 sudo apt-get -o Acquire::Retries=2 -o Acquire::http::Timeout=20 update -qq || true
-            timeout 180 sudo apt-get -o Acquire::Retries=2 -o Acquire::http::Timeout=20 install -y ffmpeg
-          fi
-          ffmpeg -version
-          ffprobe -version
-      - name: Test audio recovery
-        run: python -m unittest discover -s test -p 'test_audio_recovery.py'
-      - name: Restore completed speech chunks
-        id: speech-cache
-        continue-on-error: true
-        uses: actions/cache/restore@v4
-        with:
-          path: audio/.tts-cache
-          key: speech-v1-${{ runner.os }}-${{ hashFiles('audio/scripts/**/*.txt') }}-${{ github.run_id }}-${{ github.run_attempt }}
-          restore-keys: |
-            speech-v1-${{ runner.os }}-${{ hashFiles('audio/scripts/**/*.txt') }}-
-      - name: Generate and verify recordings
+          bash scripts/install-offline-speech.sh
+          command -v ffmpeg
+          command -v ffprobe
+      - name: Produce and validate all six recordings
         run: |
-          python scripts/generate-audio.py
-          edition=$(node --input-type=module -e "import {readEdition} from './scripts/edition.mjs'; console.log(readEdition().date)")
-          for f in "audio/$edition/"*.mp3; do
-            duration=$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "$f")
-            awk -v duration="$duration" 'BEGIN { exit !(duration > 1) }'
-          done
-          node scripts/prepare-publication.mjs
-      - name: Save speech progress even after a service failure
-        if: ${{ always() && steps.speech-cache.outcome == 'success' }}
-        continue-on-error: true
-        uses: actions/cache/save@v4
-        with:
-          path: audio/.tts-cache
-          key: ${{ steps.speech-cache.outputs.cache-primary-key }}
-      - name: Publish recordings only if edition has not changed
+          edition="${GITHUB_REF_NAME#edition/}"
+          python3 scripts/generate-offline-audio.py "$edition"
+          node scripts/prepare-publication.mjs "$edition"
+      - name: Check candidate browser experience
+        run: |
+          npm install --no-save playwright@1.56.1
+          npx playwright install chromium
+          DI_REQUIRE_RECORDINGS=1 node test/browser-smoke.mjs
+      - name: Attach validated recordings to the candidate branch
         run: |
           expected=$(git rev-parse HEAD)
-          git fetch origin main
-          test "$(git rev-parse origin/main)" = "$expected"
-          edition=$(node --input-type=module -e "import {readEdition} from './scripts/edition.mjs'; console.log(readEdition().date)")
+          git fetch origin "$GITHUB_REF_NAME"
+          test "$(git rev-parse FETCH_HEAD)" = "$expected"
+          edition="${GITHUB_REF_NAME#edition/}"
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add "audio/$edition" publication.json
-          git diff --cached --quiet || (git commit -m "Publish $edition recordings and readiness manifest" && git push)
+          git add "editions/$edition.js" editions/latest.js "audio/$edition" publication.json
+          git diff --cached --quiet || (git commit -m "Complete $edition with validated recordings" && git push origin "HEAD:refs/heads/$GITHUB_REF_NAME")
