@@ -24,6 +24,26 @@ try{
  const dataResponse=await page.request.get(base+'editions/'+edition+'.js?ci='+Date.now());
  assert.equal(dataResponse.status(),200,'Published edition JS is accessible');
  assert.match(await dataResponse.text(),/DI_EDITION_DATA/);
+ assert.deepEqual(await page.locator('#newspaper > section.desk').evaluateAll(desks=>desks.map(d=>d.id)),
+  ['front','major','intelligence','dashboard','forward','audit']);
+ const publicAudio=[];
+ if(expectedDate){
+  const manifestResponse=await page.request.get(base+'publication.json?ci='+Date.now());
+  assert.equal(manifestResponse.status(),200);
+  const manifest=await manifestResponse.json();
+  const tracks=['en','ml','it'].flatMap(lang=>['short','full'].map(mode=>`audio/${edition}/${lang}-${mode}.mp3`));
+  assert.equal(manifest.date,edition);
+  assert.equal(manifest.ready,true);
+  assert.deepEqual(manifest.audio,tracks);
+  const results=await Promise.all(tracks.map(async path=>{
+   const track=await page.request.head(base+path+'?ci='+Date.now());
+   assert.equal(track.status(),200,path);
+   assert.match(track.headers()['content-type'],/^audio\//,path);
+   assert(Number(track.headers()['content-length'])>=5000,path);
+   return path;
+  }));
+  publicAudio.push(...results);
+ }
  const player=page.locator('#di-italian-play');assert.equal(await player.isVisible(),true,'Speech play control visible');
  for(const [language,expected] of [['en',/^en/],['ml',/^ml/],['it',/^it/]]){
    await page.evaluate(lang=>{const e=document.querySelector('#lang');e.value=lang;e.dispatchEvent(new Event('change',{bubbles:true}))},language);
@@ -34,5 +54,5 @@ try{
    await page.locator('#di-italian-stop').click();
  }
  assert.deepEqual(errors,[],'No uncaught live-page JavaScript errors');
- console.log(JSON.stringify({edition,liveStatus:response.status(),headlineCount:12,editionAssetStatus:dataResponse.status(),speechCalls:await page.evaluate(()=>window.__ttsCalls.map(x=>({lang:x.lang,length:x.text.length}))),note:'Speech synthesis API is mocked; this validates invocation, not physical sound output.'}));
+ console.log(JSON.stringify({edition,liveStatus:response.status(),headlineCount:12,publicAudio,editionAssetStatus:dataResponse.status(),speechCalls:await page.evaluate(()=>window.__ttsCalls.map(x=>({lang:x.lang,length:x.text.length}))),note:'Speech synthesis API is mocked; this validates invocation, not physical sound output.'}));
 }finally{await browser.close()}

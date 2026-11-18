@@ -40,7 +40,7 @@ jobs:
         run: |
           npm install --no-save playwright@1.56.1
           npx playwright install --with-deps chromium
-          node test/browser-smoke.mjs
+          DI_REQUIRE_RECORDINGS=1 node test/browser-smoke.mjs
       - name: Attach validated recordings to the candidate branch
         run: |
           expected=$(git rev-parse HEAD)
