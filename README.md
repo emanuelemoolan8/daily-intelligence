@@ -4,7 +4,7 @@ A multilingual daily-news PWA hosted on GitHub Pages, with an optional Cloudflar
 
 - `index.html` is the permanent interface. Preserve its floating navigation, settings, reading modes and audio player.
 - `editions/latest.js` loads the current dated edition. News and edition metadata belong in `editions/YYYY-MM-DD.js`.
-- The existing ChatGPT **Daily Intelligence Briefing** task supplies researched editions at 08:00 Europe/Rome. GitHub Actions generates and verifies six recordings after edition updates. No paid OpenAI API publisher is required.
+- The existing ChatGPT **Daily Intelligence Briefing** task supplies researched editions at 08:00 Europe/Rome. GitHub Actions prepares and verifies six offline recordings and the complete candidate before it is promoted to GitHub Pages.
 - `publication.json` announces the date and available recordings to the optional notification backend only after audio verification.
 - Historical editions remain available in the repository. The old 25 October HTML URL forwards to the permanent UI.
 

@@ -1,38 +1,37 @@
 # Daily publishing contract
 
-The existing ChatGPT task **Daily Intelligence Briefing** researches and writes the edition at 08:00 Europe/Rome. GitHub Actions generates recordings after the edition is committed. Do not create a second schedule or reintroduce paid API generation.
+The existing **Daily Intelligence Briefing** task starts editorial work at 08:00 Europe/Rome. There is one schedule. GitHub Actions runs in response to a candidate branch update or a manual retry. Speech generation uses eSpeak NG locally in the runner with FFmpeg.
 
-## Permanent interface
+## Write and validate the edition
 
-`index.html` is the permanent application. Never replace it with a generated newspaper and never redirect it to a dated HTML file. Publish content as `editions/YYYY-MM-DD.js`, assigning `window.DI_EDITION_DATA` to an object. Update `editions/latest.js` to load that exact file only after validation. Preserve previous edition files. Commit the new edition and pointer together.
+- Start from current main. Keep the permanent interface in `index.html`, the archived editions and recordings, the player, and the short and full reading modes.
+- Write `editions/YYYY-MM-DD.js` as a JSON payload assigned to `window.DI_EDITION_DATA`. Use the Rome date, an explicit cutoff, 12 ranked and sourced stories, all six desks, and complete English, Malayalam and Italian.
+- Give the three editions the same reporting, context, implications and forward questions. Use a single warm presenter who speaks directly to the reader or listener. Use natural localization across the lead, stories, desk cards, forecasts, audit and narration. Follow the narration and Malayalam style guides.
+- Verify the claims against dated sources. Label analysis and subjective forecasts. Explain gaps in local weather or historical market data and leave unverified observations out. The validator checks the data structure and language coverage. Editorial source review still happens while writing.
+- Record the actual reading lengths. Run the commands below on a branch named `edition/YYYY-MM-DD` before pushing it.
 
-Use `editions/2026-10-25.js` as the structural example, not as factual material for the next day. Every story, card, forecast, market observation, weather claim, source, date, lead and audit row must be reviewed afresh. Never carry an old market/weather observation forward as current data. Omit unavailable series and disclose gaps. The chart renderer selects the first supplied market and displays an explicit gap when no verified observations are available.
+```sh
+node scripts/prepare-edition.mjs YYYY-MM-DD
+node --test test/edition-contract.test.mjs test/publishing.test.mjs
+```
 
-Required metadata: `date` (YYYY-MM-DD), `cutoff`, `lead.en`, `lead.ml`, `italianHeadlines` (one title/summary pair for each story), `metrics` (label/value/source triples), `audit` (label/status pairs), and measured `counts.en`/`counts.ml`. Keep `stories` (12 ranked stories), `sections` (intelligence, dashboard, forward, audit), `forecasts`, `markets`, `weather`, and `sources` consistent with the existing rendering schema. Do not store untrusted executable code in edition files; serialize the data with JSON.stringify.
+The prepare command measures and validates the text, builds narration scripts and prepares the canonical pointer in the candidate checkout. An editor without local tooling can push the dated JSON assignment on the candidate branch and let Actions run the same checks. Keep main on the last released edition while candidate preparation runs. Checkpoint the dated edition on the candidate branch after editorial and localization validation so later runs can resume without writing it again.
 
-For each story use en_title, ml_title, en_summary, ml_summary, deep_en, deep_ml, context_en, context_ml, watch_en, watch_ml, tag and an HTTPS source. For fully translated Italian add it_title, it_summary, deep_it, context_it, watch_it and equivalent Italian section/card fields. Italian lead summaries alone do not satisfy the full multilingual standard. State incomplete coverage explicitly. The renderer now supports complete Italian stories, desk cards and forecasts when localization is set to complete and all paired fields are supplied. Contract tests reject missing Italian content in such editions.
+## Prepare and release
 
-## Editorial standard
+1. Push the candidate branch. **Prepare candidate edition recordings** validates its date and translations, runs the contract checks, generates six MP3s and decodes every track. It runs the mobile browser checks with the completed candidate and commits all six recordings with `publication.json` to that branch. A plain fast-forward push protects against another writer changing the branch.
+2. Check the successful workflow run, candidate tip and manifest. Release by fast-forwarding main to the complete candidate tip. For the Git data API, use the main SHA from the initial read as the expected head and keep force disabled. For git, fetch both refs, check that main is an ancestor of the candidate, then push the exact verified revision to main. A conflicting main update requires a fresh candidate based on current main and a rerun.
+3. Wait for GitHub Pages and run `node test/live-pages-tts.mjs YYYY-MM-DD`. Check the deployed pointer, dated payload, ready manifest and all six public MP3 URLs. The Pages workflow run should report the same revision published to main. The device-speech test mocks speech synthesis to verify invocation. Physical device sound and screen-off behaviour require a real phone.
+4. Report the exact edition date, published commit, verified audio status and measured lengths. The optional Cloudflare worker treats the manifest as a readiness signal. Notification delivery is independently verified.
 
-One warm, intelligent presenter speaks directly to the listener in every language. Never use two-person dialogue. Explain verified facts, context, why each story matters, real-world implications and what to watch. Localize naturally with equal depth across English, Malayalam and Italian. Report any unmet coverage requirement honestly. Never invent sources, facts, word counts, charts or successful tests.
+## Recover a candidate
 
-## Validation and publication
+If preparation fails, use the same dated branch. Fix the failed input or rerun the workflow on that branch. The old live pointer and readiness manifest remain on main throughout preparation. If Actions is unavailable, run the same tests with local Chromium and generate and verify audio before committing the complete bundle and fast-forwarding main.
 
-1. Start from current main and write `editions/YYYY-MM-DD.js` for the Europe/Rome date. An unfinished candidate can live on `edition/YYYY-MM-DD` with the live pointer untouched. Resume that branch and date on retry. Never recycle an earlier date's reporting as today's edition.
-2. In an isolated checkout, run `node scripts/prepare-edition.mjs YYYY-MM-DD`. It measures all three languages, checks the candidate directly, builds its six narration scripts and then prepares the pointer in that checkout. Run `node --test test/edition-contract.test.mjs test/publishing.test.mjs` and `node test/browser-smoke.mjs` before making a release commit. The latter uses Playwright and Chromium as installed in `.github/workflows/validate-editions.yml`.
-3. When the editor lacks a Node/Chromium workspace, push only the dated draft on `edition/YYYY-MM-DD`. The validation workflow prepares it in an isolated runner and uploads the measured edition and matching pointer as `validated-edition` only after both checks pass. On recovery, find the run for the exact draft commit. A failed run leaves the branch available for repair. An already validated draft can be promoted without regenerating the reporting.
-4. Promote only that validated pair onto main in one commit, using an authenticated, non-force-push or the GitHub Git tree API and a non-forced ref update. Build the commit on current main and check that its pointer is older than the candidate. If main moves, retry against the new head and recheck the pointer. If the date is already live, verify it and stop. Never merge the draft branch as a substitute for promoting its validated files.
-5. After Pages deploys, run `DI_EXPECTED_DATE=YYYY-MM-DD node test/live-pages-tts.mjs` and confirm GitHub Pages deployed the release commit. This checks the exact date and browser speech invocation. The browser test mocks synthesis, so it does not prove audible playback on physical devices.
-6. The existing recordings workflow runs after written publication. Track its result separately. It publishes the readiness manifest only after all six recordings are generated, and checks main before pushing. Verify the six actual URLs once the recording commit deploys. The browser retains device speech when recordings are unavailable. The manifest is an audio-readiness signal for the optional notification backend.
+```sh
+node scripts/generate-offline-audio.mjs YYYY-MM-DD
+node scripts/prepare-publication.mjs YYYY-MM-DD
+node test/browser-smoke.mjs
+```
 
-## Failure recovery and schedule continuity
-
-Written-edition publication and optional recorded audio have separate outcomes. Keep the daily briefing schedule enabled when a speech provider, browser check or deployment fails; report the failed stage without modifying the automation's enabled state or schedule. The scheduled briefing must not call automation-management tools to pause itself.
-
-After committing a verified edition, spend at most two minutes checking asynchronous audio/deployment status. If still running, report the exact pending stage and workflow link, then finish the briefing. Do not wait for the entire recording job, start duplicate generation jobs, or claim that pending audio succeeded. Failed required editorial checks still block publication of the candidate edition.
-
-The recording generator paces speech requests, retries transient failures at most four times with backoff, and stops after a 40-minute generation budget. Completed text chunks are keyed by their language and content and saved in a best-effort Actions cache even when a later chunk fails. A rerun can resume this progress; changed narration cannot reuse a chunk from different text. Partial output never replaces a recording. The readiness manifest and public recordings are still committed only after all six recordings pass verification. Provider availability and cache retention are not guaranteed.
-
-## Current limitations
-
-The 25 October archive has shorter Malayalam reporting, Italian lead summaries, and historical market/weather content. The 26 October catch-up supplies detailed content for all six desks in all three languages. It explicitly omits unverified historical price series and a Sesto alert table rather than carrying old data forward. Its measured length is shorter than the former English long-read target. Recordings follow the actual supplied text in each language. Physical phone sound output, screen-off playback and deployed Cloudflare notifications still need separate verification. These are not release claims.
+Install `espeak-ng@1.0.2` from npm for local generation. The local speech command also needs FFmpeg and ffprobe on PATH. Browser checks require Playwright and Chromium. The audio has a synthetic voice in each language.
