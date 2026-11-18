@@ -29,9 +29,9 @@ The prepare command measures and validates the text, builds narration scripts an
 If preparation fails, use the same dated branch. Fix the failed input or rerun the workflow on that branch. The old live pointer and readiness manifest remain on main throughout preparation. If Actions is unavailable, run the same tests with local Chromium and generate and verify audio before committing the complete bundle and fast-forwarding main.
 
 ```sh
-python3 scripts/generate-offline-audio.py YYYY-MM-DD
+node scripts/generate-offline-audio.mjs YYYY-MM-DD
 node scripts/prepare-publication.mjs YYYY-MM-DD
 node test/browser-smoke.mjs
 ```
 
-The local speech command needs eSpeak NG and FFmpeg. Browser checks require Playwright and Chromium. The audio has a synthetic voice in each language.
+Install `espeak-ng@1.0.2` from npm for local generation. The local speech command also needs FFmpeg and ffprobe on PATH. Browser checks require Playwright and Chromium. The audio has a synthetic voice in each language.
