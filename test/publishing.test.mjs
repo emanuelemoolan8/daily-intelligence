@@ -78,3 +78,24 @@ test('a failed candidate keeps the prior pointer and can be retried', () => {
   fs.rmSync(temp, {recursive: true, force: true});
  }
 });
+test('malformed recordings never replace the previous readiness manifest', () => {
+  const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'di-readiness-'));
+  try {
+    fs.cpSync('scripts', path.join(temp, 'scripts'), {recursive: true});
+    fs.mkdirSync(path.join(temp, 'editions'));
+    fs.copyFileSync(`editions/${date}.js`, path.join(temp, `editions/${date}.js`));
+    fs.mkdirSync(path.join(temp, 'audio', date), {recursive: true});
+    for (const lang of ['en', 'ml', 'it']) {
+      for (const mode of ['short', 'full']) {
+        fs.writeFileSync(path.join(temp, 'audio', date, `${lang}-${mode}.mp3`), Buffer.alloc(6000));
+      }
+    }
+    const manifest = path.join(temp, 'publication.json');
+    fs.writeFileSync(manifest, 'previous release');
+    assert.throws(() => execFileSync(process.execPath, ['scripts/prepare-publication.mjs', date],
+      {cwd: temp, stdio: 'pipe'}));
+    assert.equal(fs.readFileSync(manifest, 'utf8'), 'previous release');
+  } finally {
+    fs.rmSync(temp, {recursive: true, force: true});
+  }
+});
